@@ -1,0 +1,35 @@
+# ---- Python 运行时产物 ----
+__pycache__/
+*.py[cod]
+*.pyo
+
+# ---- 本机数据 / 大文件：不进仓库 ----
+backups/
+downloads/
+data/
+images/
+logs/
+settings.json
+
+# 内置运行时和 platform-tools 体积太大，自己下载放回（见 README）
+python-embed/
+tools/platform-tools/
+tools/git/
+
+# 安装包 / 镜像 / 压缩包
+*.img
+*.img.gz
+*.bin
+*.tgz
+*.tar.gz
+*.zip
+*.7z
+*.apk
+*.exe
+
+# 编辑器和系统垃圾
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+*.log

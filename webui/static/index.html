@@ -1,0 +1,2581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小米6 工具箱</title>
+<style>
+:root{
+  --primary:#6750A4; --on-primary:#fff;
+  --primary-container:#EADDFF; --on-primary-container:#21005D;
+  --secondary-container:#E8DEF8; --on-secondary-container:#1D192B;
+  --surface:#FEF7FF; --surface-dim:#DED8E1;
+  --surface-c-lowest:#fff; --surface-c-low:#F7F2FA;
+  --surface-c:#F3EDF7; --surface-c-high:#ECE6F0;
+  --on-surface:#1D1B20; --on-surface-var:#49454F;
+  --outline:#79747E; --outline-var:#CAC4D0;
+  --error:#B3261E; --success:#0F6B3F; --success-c:#C6F0DA; --warn-c:#FFE7B3; --warn:#7A5200;
+  --r-xl:32px; --r-lg:24px; --r-md:20px; --r-full:999px;
+  --ease:cubic-bezier(.2,0,0,1); --spring:cubic-bezier(.05,.7,.1,1);
+  --shadow-1:0 1px 2px rgba(29,27,32,.06),0 2px 6px rgba(29,27,32,.04);
+  --shadow-2:0 2px 6px rgba(29,27,32,.07),0 6px 18px rgba(29,27,32,.05),0 12px 32px rgba(29,27,32,.04);
+  --shadow-3:0 4px 10px rgba(29,27,32,.09),0 12px 28px rgba(29,27,32,.07),0 24px 56px rgba(29,27,32,.05);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{
+  background:var(--surface-c-low); color:var(--on-surface);
+  font-family:"MiSans","HarmonyOS Sans SC","Microsoft YaHei UI","Segoe UI Variable","Segoe UI",system-ui,sans-serif;
+  font-size:14px; line-height:1.55; overflow:hidden;
+  letter-spacing:.1px;
+  display:flex; flex-direction:column;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+/* ---------- 顶栏 ---------- */
+.appbar{
+  height:64px; display:flex; align-items:center; gap:14px; padding:0 20px;
+  background:var(--surface-c-low); flex:none;
+  transition:background .2s var(--ease);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{
+  width:36px;height:36px;border-radius:50%;background:var(--primary-container);
+  color:var(--on-primary-container);display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:17px;line-height:1;padding-bottom:1px;
+  box-shadow:0 1px 2px rgba(0,0,0,.06);
+}
+.brand h1{font-size:17px;font-weight:600;margin:0;letter-spacing:.2px}
+.brand h1 span{color:var(--primary)}
+.spacer{flex:1}
+.chip{
+  height:32px;padding:0 14px;border-radius:var(--r-full);display:inline-flex;align-items:center;gap:6px;
+  background:var(--surface-c); color:var(--on-surface-var); font-size:12.5px; font-weight:500;
+  transition:background .25s var(--ease),color .25s var(--ease);
+}
+.chip.ok{background:var(--success-c);color:var(--success)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--outline)}
+.chip.ok .dot{background:var(--success)}
+/* ---------- 内容 ---------- */
+main{flex:1;overflow-y:auto;overflow-x:hidden;padding:8px 20px 96px;scroll-behavior:smooth}
+.page{animation:slideIn .34s var(--spring) both}
+@keyframes slideIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* 元素逐个入场 */
+.page > *{animation:rise .42s var(--spring) both}
+.page > *:nth-child(1){animation-delay:.02s}
+.page > *:nth-child(2){animation-delay:.05s}
+.page > *:nth-child(3){animation-delay:.08s}
+.page > *:nth-child(4){animation-delay:.11s}
+.page > *:nth-child(5){animation-delay:.14s}
+.page > *:nth-child(6){animation-delay:.17s}
+@keyframes rise{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+h2{font-size:27px;font-weight:650;margin:10px 0 6px;letter-spacing:-.5px}
+.sub{color:var(--on-surface-var);margin:0 0 18px;font-size:13.5px}
+/* 卡片 */
+.card{
+  background:var(--surface-c-lowest);border-radius:var(--r-lg);padding:18px;
+  box-shadow:var(--shadow-1);
+  transition:box-shadow .28s var(--ease),transform .28s var(--spring);
+}
+.card:hover{box-shadow:var(--shadow-2);transform:translateY(-1px)}
+.hero{
+  background:
+    radial-gradient(120% 140% at 0% 0%,color-mix(in srgb,var(--primary-container) 92%,white),transparent 62%),
+    radial-gradient(120% 140% at 100% 100%,color-mix(in srgb,var(--secondary-container) 85%,white),transparent 58%),
+    linear-gradient(135deg,var(--surface-c),var(--surface-c-high));
+  display:flex;align-items:center;gap:16px;margin-bottom:14px;border-radius:var(--r-xl);
+  box-shadow:var(--shadow-2);
+}
+.hero .model{font-size:24px;font-weight:700;letter-spacing:-.4px}
+.hero .meta{color:var(--on-surface-var);font-size:12.5px;margin-top:2px}
+.hero .chips{display:flex;gap:8px;margin-left:auto}
+/* 指标格 */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+.stat{display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px 12px}
+.stat .label{font-size:12.5px;color:var(--on-surface-var);font-weight:500;align-self:flex-start}
+.ring{
+  width:104px;height:104px;border-radius:50%;display:grid;place-items:center;position:relative;
+  transition:background .6s var(--spring);
+}
+.ring::before{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--surface-c-lowest)}
+.ring span{position:relative;font-size:22px;font-weight:700;letter-spacing:-.5px}
+.big{font-size:30px;font-weight:700;letter-spacing:-1px;margin-top:22px}
+.unit{font-size:13px;color:var(--on-surface-var);margin-top:2px}
+.cap{font-size:12px;color:var(--on-surface-var)}
+/* 设备信息 */
+.rows{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin-top:14px}
+.row{display:flex;gap:10px;font-size:13.5px}
+.row b{color:var(--on-surface-var);font-weight:500;min-width:64px;font-size:12.5px}
+/* 按钮 + 波纹 */
+.btn{
+  position:relative;overflow:hidden;border:0;cursor:pointer;font-family:inherit;
+  height:40px;padding:0 22px;border-radius:var(--r-full);font-size:13.5px;font-weight:600;
+  background:var(--primary);color:var(--on-primary);
+  transition:box-shadow .2s var(--ease),transform .12s var(--ease),background .2s var(--ease);
+}
+.btn:hover{box-shadow:0 1px 3px rgba(103,80,164,.4)}
+.btn:active{transform:scale(.97)}
+.btn.tonal{background:var(--secondary-container);color:var(--on-secondary-container)}
+.btn.outline{background:transparent;color:var(--primary);box-shadow:inset 0 0 0 1px var(--outline)}
+.btn.danger{background:transparent;color:var(--error);box-shadow:inset 0 0 0 1px var(--error)}
+.btn.danger:hover{background:color-mix(in srgb,var(--error) 8%,transparent)}
+.ripple{position:absolute;border-radius:50%;transform:scale(0);animation:rip .55s var(--ease) forwards;
+  background:currentColor;opacity:.28;pointer-events:none}
+@keyframes rip{to{transform:scale(2.4);opacity:0}}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+/* ---------- 磁贴 ---------- */
+.statusbar-strip{
+  display:flex;align-items:center;gap:12px;padding:4px 4px 18px;flex-wrap:wrap;
+}
+.statusbar-strip .sb-main{min-width:0;flex:1}
+.statusbar-strip .model{font-size:22px;font-weight:700;letter-spacing:-.4px}
+.statusbar-strip .meta{font-size:12.5px;color:var(--on-surface-var);margin-top:2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--tile-min,102px),1fr));gap:8px}
+.tile{
+  position:relative;overflow:hidden;min-width:0;
+  background:var(--surface-c-lowest);border-radius:16px;padding:10px;
+  aspect-ratio:1/1;display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:var(--shadow-1);cursor:default;
+  transition:transform .22s var(--spring),box-shadow .22s var(--ease),background .3s var(--ease);
+}
+.tile:hover{transform:translateY(-2px) scale(1.02);box-shadow:var(--shadow-2)}
+.tile:active{transform:scale(.985)}
+.tile .em{font-size:19px;line-height:1}
+.tile .tv{font-size:19px;font-weight:700;letter-spacing:-.6px;line-height:1.1}
+.tile .tv.sm{font-size:12.5px;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .tv.xs{font-size:10.5px;font-weight:600;letter-spacing:0;line-height:1.3;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.tile .tl{font-size:10px;color:var(--on-surface-var);margin-top:2px;font-weight:500;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile.accent{
+  background:linear-gradient(150deg,color-mix(in srgb,var(--primary-container) 90%,white),var(--surface-c-lowest) 78%);
+}
+.tile.accent .tv{font-size:24px}
+html[data-theme="dark"] .tile.accent{
+  background:linear-gradient(150deg,color-mix(in srgb,var(--primary-container) 55%,black),var(--surface-c-lowest) 80%);
+}
+.tile.wide{grid-column:span 2;aspect-ratio:auto;flex-direction:row;align-items:center;gap:10px;padding:10px 12px}
+.tile.wide .tv{font-size:10.5px}
+.track.thin{height:4px;margin-top:6px}
+/* ---------- 文件页 ---------- */
+.list{background:var(--surface-c-lowest);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-1)}
+.fl{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;
+  border-bottom:1px solid var(--surface-c-high);transition:background .15s var(--ease)}
+.fl:last-child{border:0}
+.fl:hover{background:var(--surface-c)}
+.fl:active{background:var(--surface-c-high)}
+.fl .em{font-size:18px;flex:none;width:22px;text-align:center}
+.fl .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13.5px}
+.fl .sz{font-size:11.5px;color:var(--on-surface-var);flex:none}
+.fl .act{opacity:0;font-size:11.5px;color:var(--primary);font-weight:600;padding:4px 10px;
+  border-radius:var(--r-full);transition:opacity .15s var(--ease)}
+.fl:hover .act{opacity:1;background:var(--primary-container);color:var(--on-primary-container)}
+.dropzone{margin-top:12px;padding:20px;border-radius:20px;text-align:center;
+  border:2px dashed var(--outline-var);color:var(--on-surface-var);font-size:13px;
+  transition:background .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease)}
+.dropzone.over{background:var(--primary-container);border-color:var(--primary);color:var(--on-primary-container)}
+.empty{padding:28px;text-align:center;color:var(--on-surface-var);font-size:13px}
+/* ---------- ADB 终端 ---------- */
+.term{background:#0f0d13;border-radius:18px;padding:14px 16px;height:clamp(200px,calc(100vh - 330px),1200px);min-height:200px;
+  overflow-y:auto;font-family:Consolas,"Cascadia Mono",monospace;font-size:12.5px;line-height:1.65;
+  box-shadow:var(--shadow-2);white-space:pre-wrap;word-break:break-all}
+.term .l-cmd{color:var(--term-cmd,#D0BCFF);font-weight:600}
+.term .l-out{color:#E6E0E9}
+.term .l-err{color:var(--term-err,#F2B8B5)}
+.term .l-dim{color:#8B8595}
+.termline{display:flex;align-items:center;gap:10px;margin-top:10px;
+  background:var(--surface-c-lowest);border-radius:var(--r-full);padding:4px 4px 4px 16px;box-shadow:var(--shadow-1)}
+.termline .ps1{font-family:Consolas,monospace;color:var(--term-cmd,var(--primary));font-weight:700}
+.termline input{flex:1;border:0;background:none;outline:none;font-family:Consolas,monospace;
+  font-size:13px;color:var(--on-surface);padding:8px 0}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.term-hint{margin-top:8px;font-family:Consolas,monospace;font-size:11.5px;color:var(--on-surface-var);
+  line-height:1.7;word-break:break-all;padding-left:4px}
+.qc{font-size:11.5px;padding:6px 12px;border-radius:var(--r-full);cursor:pointer;
+  background:var(--surface-c);color:var(--on-surface-var);font-family:Consolas,monospace;
+  transition:background .18s var(--ease),color .18s var(--ease)}
+.qc:hover{background:var(--primary-container);color:var(--on-primary-container)}
+/* ---------- 开屏 ---------- */
+#splash{position:fixed;inset:0;z-index:9999;background:var(--surface-c-low);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  transition:opacity .45s var(--ease),visibility .45s}
+#splash.hide{opacity:0;visibility:hidden}
+.sp-mark{width:72px;height:72px;border-radius:50%;background:var(--primary-container);
+  color:var(--on-primary-container);display:grid;place-items:center;font-size:32px;font-weight:700;
+  animation:pop .55s var(--spring) both}
+.sp-title{font-size:15px;font-weight:600;color:var(--on-surface-var);letter-spacing:.5px;
+  animation:rise .5s .1s var(--spring) both}
+.sp-bar{width:120px;height:3px;border-radius:999px;background:var(--surface-c-high);overflow:hidden}
+.sp-bar i{display:block;height:100%;width:40%;border-radius:999px;background:var(--primary);
+  animation:slide 1s var(--ease) infinite}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}
+/* 模式配色 */
+.chip.mode-adb{background:var(--success-c);color:var(--success)}
+.chip.mode-twrp{background:var(--warn-c);color:var(--warn)}
+.chip.mode-fastboot{background:var(--secondary-container);color:var(--on-secondary-container)}
+.chip.mode-recovery{background:var(--primary-container);color:var(--on-primary-container)}
+/* ---------- 滚动条 ---------- */
+main{scrollbar-width:thin;scrollbar-color:var(--outline-var) transparent}
+main::-webkit-scrollbar{width:10px;height:10px}
+main::-webkit-scrollbar-track{background:transparent}
+main::-webkit-scrollbar-thumb{background:var(--outline-var);border-radius:999px;
+  border:3px solid transparent;background-clip:content-box;
+  transition:background .2s var(--ease)}
+main::-webkit-scrollbar-thumb:hover{background:var(--outline);background-clip:content-box}
+.term{scrollbar-width:thin;scrollbar-color:#49454F transparent}
+.term::-webkit-scrollbar{width:8px}
+.term::-webkit-scrollbar-track{background:transparent}
+.term::-webkit-scrollbar-thumb{background:#49454F;border-radius:999px;border:2px solid transparent;background-clip:content-box}
+.term::-webkit-scrollbar-thumb:hover{background:#79747E;background-clip:content-box}
+.track.thin{height:6px;margin-top:8px}
+.hero2{padding:22px 24px;align-items:center;gap:20px}
+.hero-left{flex:1;min-width:0}
+.big-ring{width:118px;height:118px;flex:none}
+.big-ring::before{inset:10px}
+.big-ring span{font-size:25px;letter-spacing:-.8px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.metric{display:flex;flex-direction:column;gap:4px;min-height:132px}
+.metric .big{font-size:34px;font-weight:700;letter-spacing:-1.2px;margin:6px 0 2px;display:flex;align-items:baseline;gap:3px}
+.metric .unit{font-size:14px;font-weight:500;color:var(--on-surface-var);letter-spacing:0}
+.bars{display:flex;align-items:flex-end;gap:4px;height:34px;margin-top:auto}
+.bars i{flex:1;background:color-mix(in srgb,var(--primary) 45%,transparent);border-radius:4px 4px 2px 2px;
+  animation:grow .5s var(--spring) both}
+.bars i:nth-child(1){height:35%}.bars i:nth-child(2){height:55%}.bars i:nth-child(3){height:40%}
+.bars i:nth-child(4){height:70%}.bars i:nth-child(5){height:50%}.bars i:nth-child(6){height:82%}
+.bars i:nth-child(7){height:60%}
+@keyframes grow{from{transform:scaleY(.1);opacity:0}to{transform:none;opacity:1}}
+.track{height:8px;border-radius:999px;background:var(--surface-c-high);margin-top:auto;overflow:hidden}
+.fill{height:100%;width:0;border-radius:999px;background:var(--primary);
+  transition:width .7s var(--spring)}
+.listcard{padding:8px 18px 18px}
+.infolist{display:flex;flex-direction:column}
+.infolist .row{display:flex;align-items:center;gap:12px;padding:13px 0;
+  border-bottom:1px solid var(--surface-c-high);font-size:14px}
+.infolist .row:last-child{border:0}
+.infolist .em{font-size:17px;width:22px;text-align:center;flex:none}
+.infolist b{font-weight:500;color:var(--on-surface-var);min-width:76px}
+.infolist span:last-child{margin-left:auto;text-align:right;color:var(--on-surface);font-weight:500;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%}
+/* ---------- 全量包 ---------- */
+.rom-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;
+  background:var(--surface-c-low);margin-bottom:8px}
+.rom-row .em{font-size:18px;flex:none}
+.rom-row .meta2{font-size:11.5px;color:var(--on-surface-var);margin-top:2px}
+.rom-btns{display:flex;gap:6px;flex:none}
+.rom-detail{margin:-2px 0 10px 12px;padding:10px 14px;border-radius:12px;background:var(--surface-c);
+  font-size:12px;color:var(--on-surface-var);white-space:pre-wrap;line-height:1.7;word-break:break-word}
+.rom-log{font-family:Consolas,monospace;font-size:11.5px;line-height:1.75}
+.rom-log .okline{color:var(--success)}
+.rom-log .badline{color:var(--error)}
+/* ---------- AI ---------- */
+.ai-chat{display:flex;flex-direction:column;gap:10px;min-height:180px;
+  height:clamp(180px,calc(100vh - 400px),1400px);overflow-y:auto;padding:2px 2px 6px;
+  scrollbar-width:thin;scrollbar-color:var(--outline-var) transparent}
+.ai-msg{max-width:88%;padding:12px 16px;border-radius:18px;font-size:13.5px;line-height:1.65;
+  white-space:pre-wrap;word-break:break-word;animation:rise .3s var(--spring) both}
+.ai-msg.user{align-self:flex-end;background:var(--primary);color:var(--on-primary);border-bottom-right-radius:6px}
+.ai-msg.bot{align-self:flex-start;background:var(--surface-c-lowest);box-shadow:var(--shadow-1);border-bottom-left-radius:6px}
+.ai-msg.err{background:#F9DEDC;color:#410E0B}
+html[data-theme="dark"] .ai-msg.err{background:#4A1B17;color:#F9DEDC}
+.ai-steps{margin-top:10px;display:flex;flex-direction:column;gap:4px}
+.ai-step{display:flex;gap:8px;align-items:flex-start;font-family:Consolas,monospace;font-size:11.5px;
+  padding:6px 10px;border-radius:10px;background:var(--surface-c);color:var(--on-surface-var)}
+.ai-step .nm{font-weight:700;color:var(--primary);flex:none}
+.ai-step .tx{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ai-step.bad{background:#F9DEDC;color:#410E0B}
+html[data-theme="dark"] .ai-step.bad{background:#4A1B17;color:#F9DEDC}
+.ai-pending{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--warn-c);color:var(--warn);font-size:12.5px}
+.ai-pending .ln{font-family:Consolas,monospace;font-size:11.5px;margin-top:4px;word-break:break-all}
+.ai-tools{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.ai-typing{align-self:flex-start;color:var(--on-surface-var);font-size:12.5px;padding:4px}
+.ai-status{font-size:12px;color:var(--on-surface-var);margin-bottom:6px}
+.ai-content{white-space:pre-wrap}
+.ai-think{margin:2px 0 10px;border-radius:12px;background:var(--surface-c);padding:8px 12px;
+  font-size:12px;color:var(--on-surface-var);max-width:100%}
+.ai-think summary{cursor:pointer;font-weight:600;list-style:none;font-size:12px;color:var(--primary)}
+.ai-think summary::-webkit-details-marker{display:none}
+.ai-think summary::before{content:"🧠 ";}
+.ai-think-body{white-space:pre-wrap;margin-top:6px;line-height:1.7;max-height:300px;overflow-y:auto;
+  font-family:Consolas,monospace;font-size:11.5px}
+.ai-foot{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:12.5px;
+  color:var(--on-surface-var);flex-wrap:wrap}
+/* 开关做成胶囊 */
+.toggle{position:relative;display:inline-flex}
+.toggle input{position:absolute;opacity:0;width:0;height:0}
+.toggle span{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:999px;
+  background:var(--surface-c);color:var(--on-surface-var);font-size:12.5px;font-weight:500;cursor:pointer;
+  box-shadow:inset 0 0 0 1px transparent;
+  transition:background .2s var(--ease),color .2s var(--ease),box-shadow .2s var(--ease)}
+.toggle span:hover{background:var(--surface-c-high)}
+.toggle input:checked + span{background:var(--secondary-container);color:var(--on-secondary-container);
+  box-shadow:inset 0 0 0 1.5px var(--primary);font-weight:600}
+.toggle input:focus-visible + span{outline:2px solid var(--primary);outline-offset:2px}
+/* Key 状态胶囊：点一下就展开设置卡 */
+.key-chip{cursor:pointer;box-shadow:inset 0 0 0 1px var(--outline-var);transition:background .2s var(--ease)}
+.key-chip:hover{background:var(--surface-c-high)}
+.key-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.key-in{flex:1;min-width:220px;height:40px;border-radius:var(--r-full);border:1px solid var(--outline-var);
+  background:var(--surface-c-lowest);color:var(--on-surface);padding:0 18px;
+  font-family:Consolas,monospace;font-size:12.5px;outline:none;
+  transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+.key-in:focus{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 22%,transparent)}
+/* 输入区 */
+.ai-composer{display:flex;align-items:center;gap:8px;margin-top:12px;padding:6px 7px 6px 16px;
+  background:var(--surface-c-lowest);border-radius:var(--r-full);box-shadow:var(--shadow-1);
+  transition:box-shadow .2s var(--ease)}
+.ai-composer:focus-within{box-shadow:var(--shadow-2),inset 0 0 0 2px var(--primary)}
+.ai-composer .mark{font-size:15px;flex:none;opacity:.85}
+.ai-composer input{flex:1;min-width:0;border:0;background:none;outline:none;font-family:inherit;
+  font-size:13.5px;color:var(--on-surface);padding:9px 0}
+.ai-send{width:38px;height:38px;padding:0;border-radius:50%;display:grid;place-items:center;
+  font-size:17px;font-weight:700;flex:none;transition:background .2s var(--ease),transform .15s var(--ease)}
+.ai-send.stopping{background:var(--error);color:#fff;font-size:13px}
+.ai-send.stopping:hover{box-shadow:0 2px 10px color-mix(in srgb,var(--error) 45%,transparent)}
+.btn:disabled{opacity:.45;cursor:default;transform:none!important;box-shadow:none!important}
+.btn:disabled:hover{box-shadow:none}
+/* ---------- IMG 解包 ---------- */
+.img-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto}
+.img-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;
+  background:var(--surface-c-low);cursor:pointer;transition:background .15s var(--ease)}
+.img-row:hover{background:var(--surface-c)}
+.img-row.dim{opacity:.6}
+.img-row .em{font-size:17px;flex:none;width:20px;text-align:center}
+.img-row.on{outline:2px solid var(--primary);background:var(--primary-container);color:var(--on-primary-container)}
+.img-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+.img-row .meta2{font-size:11.5px;color:var(--on-surface-var)}
+.img-row.on .meta2{color:var(--on-primary-container);opacity:.8}
+.img-kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px 18px;
+  margin-top:12px;font-size:12.5px}
+.img-kv > div{display:flex;gap:8px;min-width:0}
+.img-kv b{color:var(--on-surface-var);font-weight:500;min-width:76px;flex:none}
+.img-kv span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.img-work{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.img-tree-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.img-tree-body{max-height:44vh;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.img-file{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:10px;cursor:pointer;
+  font-size:12.5px;font-family:Consolas,monospace}
+.img-file:hover{background:var(--surface-c)}
+.img-file.on{background:var(--secondary-container);color:var(--on-secondary-container);font-weight:600}
+.img-file .sz{margin-left:auto;font-size:11px;color:var(--on-surface-var);flex:none}
+.img-editor textarea{width:100%;height:44vh;border:0;border-radius:14px;background:var(--surface-c);
+  color:var(--on-surface);font-family:Consolas,monospace;font-size:12.5px;line-height:1.7;
+  padding:12px 14px;resize:vertical;outline:none}
+/* ---------- 关窗提示 ---------- */
+#bye{position:fixed;inset:0;z-index:10000;background:var(--surface-c-low);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center}
+#bye[hidden]{display:none}
+#bye .bye-mark{width:64px;height:64px;border-radius:50%;background:var(--surface-c-high);
+  color:var(--on-surface-var);display:grid;place-items:center;font-size:28px;font-weight:700}
+#bye .bye-t{font-size:19px;font-weight:650}
+#bye .bye-h{font-size:13px;color:var(--on-surface-var);line-height:1.9}
+/* ---------- 概览仪表盘（自适应：不管窗口多大都铺满、自动折行） ---------- */
+.dash{display:flex;flex-direction:column;gap:14px;min-height:calc(100vh - 205px)}
+.dash-row{display:flex;flex-wrap:wrap;gap:14px;align-items:stretch}
+.dash-row:last-child{flex:1 1 auto}
+.dash-row > .card{min-width:0;padding:18px 20px}
+.dash-hero{flex:2 1 460px}
+.dash-bat{flex:1 1 240px}
+.metric-card{flex:1 1 190px}
+.dash-info{flex:2 1 420px}
+.dash-side{flex:1 1 280px}
+.dash-hero{
+  display:flex;flex-direction:column;justify-content:space-between;gap:18px;
+  border-radius:var(--r-xl);box-shadow:var(--shadow-2);
+  background:
+    radial-gradient(120% 150% at 0% 0%,color-mix(in srgb,var(--primary-container) 88%,white),transparent 62%),
+    linear-gradient(135deg,var(--surface-c),var(--surface-c-high));
+}
+html[data-theme="dark"] .dash-hero{
+  background:
+    radial-gradient(120% 150% at 0% 0%,color-mix(in srgb,var(--primary-container) 70%,black),transparent 62%),
+    linear-gradient(135deg,#211F26,#1D1B20);
+}
+.dh-top{display:flex;align-items:center;gap:16px}
+.hero-mark{width:54px;height:54px;border-radius:50%;background:var(--primary);color:var(--on-primary);
+  display:grid;place-items:center;font-size:25px;font-weight:700;flex:none;box-shadow:var(--shadow-1)}
+.dh-main{min-width:0}
+.hero-model{font-size:clamp(21px,2.2vw,28px);font-weight:700;letter-spacing:-.6px;line-height:1.2}
+.hero-meta{font-size:12.5px;color:var(--on-surface-var);margin-top:5px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hero-note{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--on-surface-var)}
+.hero-note div{display:flex;align-items:center;gap:8px}
+.hero-note i{width:8px;height:8px;border-radius:50%;background:var(--outline);flex:none;font-style:normal}
+.hero-note i.ok{background:var(--success)}
+.hero-note i.warn{background:#C08A00}
+.hero-note i.bad{background:var(--error)}
+.dh-chips{display:flex;gap:8px;flex-wrap:wrap}
+.dash-bat{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.dash-bat .big-ring{width:104px;height:104px}
+.dash-bat .big-ring::before{inset:9px}
+.dash-bat .big-ring span{font-size:23px}
+.db-cap{font-size:13.5px;font-weight:650}
+.db-sub{font-size:11.5px;color:var(--on-surface-var);text-align:center;line-height:1.6}
+.metric-card{display:flex;flex-direction:column;gap:7px}
+.mc-head{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--on-surface-var);font-weight:500}
+.mc-ico{font-size:14px;line-height:1}
+.mc-val{font-size:clamp(23px,2.4vw,30px);font-weight:700;letter-spacing:-1.2px;line-height:1.1;
+  display:flex;align-items:baseline;gap:3px}
+.mc-val.sm{font-size:clamp(15px,1.6vw,19px);letter-spacing:-.3px}
+.mc-unit{font-size:13px;font-weight:500;color:var(--on-surface-var);letter-spacing:0}
+.mc-sub{font-size:11.5px;color:var(--on-surface-var);margin-top:auto;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-title{font-size:13.5px;font-weight:650;margin-bottom:12px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px 24px;font-size:12.5px}
+.kv-row{display:flex;gap:8px;min-width:0}
+.kv-row b{color:var(--on-surface-var);font-weight:500;min-width:62px;flex:none}
+.kv-row span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:10px;margin-top:16px}
+.mini{display:flex;flex-direction:column;align-items:center;gap:3px;padding:11px 6px;
+  border-radius:14px;background:var(--surface-c);min-width:0}
+.mini .mi{font-size:15px;line-height:1}
+.mini b{font-size:13px;font-weight:650;max-width:100%;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.mini i{font-size:10.5px;color:var(--on-surface-var);font-style:normal}
+/* ---------- 自适应（控制台式：窗口多大就铺多满，窄了就折行） ---------- */
+main{padding:8px clamp(10px,1.6vw,28px) 96px}
+@media (min-width:1500px){
+  .mc-val{font-size:32px}
+  .hero-model{font-size:30px}
+}
+@media (max-width:900px){
+  .dash-row > .card{padding:15px 16px}
+  .dash-hero{flex:1 1 100%}
+  .dash-bat{flex:1 1 100%;flex-direction:row;justify-content:center;gap:24px}
+  .dash-bat .big-ring{width:84px;height:84px}
+  .metric-card{flex:1 1 calc(50% - 7px)}
+  .dash-info{flex:1 1 100%}
+  .dash-side{flex:1 1 100%}
+  .appbar{padding:0 12px;gap:8px}
+  .brand h1{display:none}
+  .kv{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+}
+@media (max-width:700px){
+  .metric-card{flex:1 1 100%}
+  .dh-chips .chip{font-size:11px;padding:0 10px}
+}
+/* ---------- 深色 ---------- */
+html[data-theme="dark"]{
+  --primary:#D0BCFF;--on-primary:#381E72;
+  --primary-container:#4F378B;--on-primary-container:#EADDFF;
+  --secondary-container:#4A4458;--on-secondary-container:#E8DEF8;
+  --surface:#141218;--surface-c-lowest:#1D1B20;--surface-c-low:#141218;
+  --surface-c:#211F26;--surface-c-high:#2B2930;
+  --on-surface:#E6E0E9;--on-surface-var:#CAC4D0;
+  --outline:#938F99;--outline-var:#49454F;
+  --success:#9BE5B4;--success-c:#1E4630;--warn-c:#42310F;--warn:#F5D9A8;
+  --shadow-1:0 1px 2px rgba(0,0,0,.5);
+  --shadow-2:0 2px 6px rgba(0,0,0,.55),0 8px 24px rgba(0,0,0,.45);
+  --shadow-3:0 4px 12px rgba(0,0,0,.6);
+}
+html[data-theme="dark"] .hero{
+  background:
+    radial-gradient(120% 140% at 0% 0%,color-mix(in srgb,var(--primary-container) 75%,black),transparent 62%),
+    radial-gradient(120% 140% at 100% 100%,color-mix(in srgb,var(--secondary-container) 70%,black),transparent 58%),
+    linear-gradient(135deg,#211F26,#1D1B20);
+}
+html[data-theme="dark"] nav{background:rgba(20,18,24,.9)}
+body,.card,nav,.appbar,.chip,.field{transition:background-color .3s var(--ease),color .3s var(--ease),border-color .3s var(--ease)}
+html[data-motion="off"] *,html[data-motion="off"] *::before{animation:none!important;transition:none!important}
+/* ---------- 设置控件 ---------- */
+.seg{display:inline-flex;background:var(--surface-c);border-radius:var(--r-full);padding:3px;gap:2px}
+.seg button{border:0;background:none;font-family:inherit;font-size:12.5px;padding:7px 14px;
+  border-radius:var(--r-full);color:var(--on-surface-var);cursor:pointer;
+  transition:background .22s var(--ease),color .22s var(--ease)}
+.seg button.on{background:var(--secondary-container);color:var(--on-secondary-container);font-weight:600}
+.swatches{display:flex;gap:12px;padding:4px 0 14px}
+.sw{width:34px;height:34px;border-radius:50%;border:0;cursor:pointer;position:relative;
+  transition:transform .18s var(--spring)}
+.sw:hover{transform:scale(1.12)}
+.sw.on::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--on-surface)}
+.field{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:13px 0;border-bottom:1px solid var(--surface-c-high)}
+.field .t{font-size:14px;font-weight:500}
+.field .h{font-size:12px;color:var(--on-surface-var);margin-top:2px}
+/* 对话框（装应用） */
+dialog{border:0;padding:20px 22px;border-radius:var(--r-xl);background:var(--surface-c-lowest);
+  color:var(--on-surface);width:min(560px,92vw);box-shadow:var(--shadow-3)}
+dialog::backdrop{background:rgba(20,18,24,.34);backdrop-filter:blur(2px)}
+.dlg-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dlg-head .t{font-size:18px;font-weight:650;letter-spacing:-.3px}
+.dlg-head .h{font-size:12px;color:var(--on-surface-var);margin-top:2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+dialog .fl{border-radius:12px}
+dialog #apkList{max-height:46vh;overflow-y:auto;border-radius:16px;background:var(--surface-c-low)}
+/* 底部导航 */
+nav{
+  position:fixed;bottom:0;left:0;right:0;height:80px;display:flex;justify-content:center;gap:4px;
+  background:rgba(247,242,250,.92);backdrop-filter:blur(18px);
+  padding:8px 10px;box-sizing:border-box;
+}
+.tab{
+  position:relative;overflow:hidden;border:0;background:none;cursor:pointer;font-family:inherit;
+  flex:1 1 0;min-width:52px;max-width:104px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--on-surface-var);font-size:11.5px;border-radius:var(--r-md);
+  transition:color .2s var(--ease);white-space:nowrap;
+}
+.tab .ico{width:min(56px,86%);height:30px;border-radius:var(--r-full);display:grid;place-items:center;
+  font-size:17px;line-height:1;
+  transition:background .25s var(--spring),transform .2s var(--spring)}
+.tab.active{color:var(--on-secondary-container);font-weight:600}
+.tab.active .ico{background:var(--secondary-container)}
+.tab:active .ico{transform:scale(.94)}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="sp-mark">6</div>
+  <div class="sp-title">小米6 工具箱</div>
+  <div class="sp-bar"><i></i></div>
+</div>
+
+<header class="appbar">
+  <div class="brand"><div class="mark">6</div><h1>小米<span>6</span> 工具箱</h1></div>
+  <div class="spacer"></div>
+  <div class="chip" id="devChip"><span class="dot"></span><span id="devText">连接中…</span></div>
+  <button class="btn outline" id="refresh" style="height:36px;padding:0 18px">刷新</button>
+  <button class="btn danger" id="quitBtn" title="停止本地服务并关掉窗口" style="height:36px;padding:0 16px">关闭</button>
+</header>
+
+<main>
+  <section class="page" id="page-home">
+    <div class="dash">
+      <div class="dash-row">
+        <div class="card dash-hero">
+          <div class="dh-top">
+            <div class="hero-mark">6</div>
+            <div class="dh-main">
+              <div class="hero-model" id="model">未连接设备</div>
+              <div class="hero-meta" id="meta">等待连接</div>
+            </div>
+          </div>
+          <div class="hero-note" id="heroNote"></div>
+          <div class="dh-chips">
+            <span class="chip" id="modeChip">未连接</span>
+            <span class="chip" id="blChip">BL —</span>
+            <span class="chip" id="rootChip">Root —</span>
+            <span class="chip" id="serialChip">SN —</span>
+          </div>
+        </div>
+
+        <div class="card dash-bat">
+          <div class="ring big-ring" id="batRing"><span id="batVal">--</span></div>
+          <div class="db-cap" id="batCap">电量</div>
+          <div class="db-sub" id="batVolt">—</div>
+        </div>
+      </div>
+
+      <div class="dash-row">
+        <div class="card metric-card">
+          <div class="mc-head"><span class="mc-ico">🌡️</span><span>电池温度</span></div>
+          <div class="mc-val"><span id="tempVal">--</span><span class="mc-unit">°C</span></div>
+          <div class="mc-sub" id="tempCap">—</div>
+        </div>
+
+        <div class="card metric-card">
+          <div class="mc-head"><span class="mc-ico">💾</span><span>存储 /data</span></div>
+          <div class="mc-val"><span id="stoVal">--</span></div>
+          <div class="track thin"><div class="fill" id="stoFill"></div></div>
+          <div class="mc-sub" id="stoCap">—</div>
+        </div>
+
+        <div class="card metric-card">
+          <div class="mc-head"><span class="mc-ico">🧠</span><span>内存</span></div>
+          <div class="mc-val"><span id="memVal">--</span></div>
+          <div class="track thin"><div class="fill" id="memFill"></div></div>
+          <div class="mc-sub" id="memCap">—</div>
+        </div>
+
+        <div class="card metric-card">
+          <div class="mc-head"><span class="mc-ico">⏱️</span><span>已运行</span></div>
+          <div class="mc-val sm"><span id="upVal">--</span></div>
+          <div class="mc-sub" id="upCap">—</div>
+        </div>
+      </div>
+
+      <div class="dash-row">
+        <div class="card dash-info">
+          <div class="card-title">📋 系统信息</div>
+          <div class="kv" id="sysList"></div>
+        </div>
+
+        <div class="card dash-side">
+          <div class="card-title">⚡ 常用操作</div>
+          <div class="actions" style="margin-top:6px">
+            <button class="btn">刷入 TWRP</button>
+            <button class="btn tonal">备份分区</button>
+            <button class="btn outline">装应用</button>
+          </div>
+          <div class="mini-grid">
+            <div class="mini"><span class="mi">🎭</span><b id="kMagisk">—</b><i>面具</i></div>
+            <div class="mini"><span class="mi">🛡️</span><b id="kTwrp">—</b><i>TWRP</i></div>
+            <div class="mini"><span class="mi">🧩</span><b id="kPart">—</b><i>分区</i></div>
+            <div class="mini"><span class="mi">📦</span><b id="appsVal">—</b><i>三方应用</i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="page-flash" hidden>
+    <div class="statusbar-strip">
+      <div class="sb-main">
+        <div class="model" style="font-size:19px">刷入镜像</div>
+        <div class="meta" id="flashMeta">把 .img 拖到对应分区上即可刷入 · 手机需在 Fastboot</div>
+      </div>
+      <div class="chip" id="fbChip">检测中</div>
+    </div>
+    <div class="parts" id="parts" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px"></div>
+    <div class="dropzone" id="flashHint" style="margin-top:14px">
+      ⬇ 拖 .img 到分区磁贴 = 刷入 &nbsp;·&nbsp; 单击磁贴 = 提取该分区到 backups/（需 TWRP 或 root）
+      <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
+        <button class="btn outline" id="openBackups" style="height:32px;padding:0 14px">打开 backups 文件夹</button>
+      </div>
+      <div style="margin-top:8px;font-size:11px;opacity:.75">默认保存位置：Mi6Toolbox\backups\&lt;分区&gt;_&lt;时间&gt;.img</div>
+    </div>
+
+    <details id="moreParts" style="margin-top:14px;background:var(--surface-c-lowest);border-radius:20px;padding:14px 16px;box-shadow:var(--shadow-1)">
+      <summary style="cursor:pointer;font-size:14px;font-weight:600;list-style:none;display:flex;align-items:center;gap:8px">
+        <span>🧩</span>自选分区刷入<span style="font-size:11.5px;color:var(--on-surface-var);font-weight:400">展开手机全部分区</span>
+      </summary>
+      <div id="allParts" style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
+        <div class="empty" style="padding:12px">展开后自动读取…</div>
+      </div>
+    </details>
+
+    <details id="romBox" open style="margin-top:14px;background:var(--surface-c-lowest);border-radius:20px;padding:14px 16px;box-shadow:var(--shadow-1)">
+      <summary style="cursor:pointer;font-size:14px;font-weight:600;list-style:none;display:flex;align-items:center;gap:8px">
+        <span>📦</span>全量包<span style="font-size:11.5px;color:var(--on-surface-var);font-weight:400">解包 / 整包刷入</span>
+      </summary>
+      <div id="romList" style="margin-top:12px">
+        <div class="empty" style="padding:12px">扫描中…</div>
+      </div>
+      <div class="dropzone" id="romDrop" style="margin-top:10px">⬇ 把 .tgz / .tar.gz / .zip 全量包拖到这里（存进 downloads/）</div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <button class="btn outline" id="romRefresh" style="height:30px;padding:0 12px;font-size:11.5px">重新扫描</button>
+        <button class="btn outline" id="romOpen" style="height:30px;padding:0 12px;font-size:11.5px">打开 downloads 文件夹</button>
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:var(--on-surface-var);line-height:1.7">
+        线刷包（含 images/*.img）→ 解包后可按顺序整包 fastboot 刷入；卡刷包（LineageOS 等）→ 需进 TWRP 用 adb sideload。<br>
+        默认跳过 misc / persist / modemst1 / modemst2 / fsg / cache 这些不该无脑刷的分区。
+      </div>
+    </details>
+    <script>
+    const PARTS = [
+      ["boot", "内核 + ramdisk", true], ["recovery", "恢复分区 / TWRP", true],
+      ["system", "系统分区", true], ["vendor", "厂商分区", true],
+      ["modem", "基带（刷错没信号）", true], ["modemst1", "IMEI 参数（慎刷）", true],
+      ["persist", "传感器 / 指纹", true], ["misc", "开机标志", false],
+      ["cache", "缓存", false], ["userdata", "用户数据（会清空）", true],
+      ["cust", "运营商定制", false], ["splash", "开机第一屏", false]
+    ];
+    const ICON = { boot: "🥾", recovery: "🛡️", userdata: "🗑️", persist: "🧭", modem: "📶",
+      modemst1: "🆔", modemst2: "🆔", system: "🧱", vendor: "🧱", fsg: "📶" };
+    const MB = (n) => ((n || 0) / 1048576).toFixed(1) + " MB";
+    const setMeta = (t) => { document.getElementById("flashMeta").textContent = t; };
+    const wantConfirm = () => (JSON.parse(localStorage.mi6prefs || "{}").confirm !== false);
+
+    /* 分区磁贴：拖 .img 进来 = 刷入，单击 = 提取到 backups/ */
+    function partTile(part, desc, risky) {
+      const el = document.createElement("div");
+      el.className = "tile part";
+      el.dataset.part = part;
+      el.style.cssText = "aspect-ratio:auto;min-height:96px;justify-content:flex-start;gap:4px";
+      el.innerHTML = `
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="em" style="font-size:15px">${ICON[part] || "💽"}</span>
+          <b style="font-size:13px">${part}</b>
+          ${risky ? '<span style="font-size:10px;color:var(--error)" title="刷错可能开不了机">!</span>' : ""}
+        </div>
+        <div class="tl" style="white-space:normal;font-size:10.5px;line-height:1.35">${desc}</div>
+        <div class="tip tl" style="font-size:10px;color:var(--primary);opacity:0;transition:opacity .2s">拖入刷写</div>`;
+      bindPart(el, part);
+      return el;
+    }
+
+    /* 磁贴和下面的分区行共用一套拖放逻辑 */
+    function bindPart(el, part) {
+      const tip = el.querySelector(".tip");
+      const setTip = (t) => { if (tip) { tip.textContent = t; tip.style.opacity = 1; } };
+      const reset = () => { el.style.background = ""; el.style.outline = ""; };
+
+      ["dragenter", "dragover"].forEach((t) => el.addEventListener(t, (e) => {
+        e.preventDefault(); e.stopPropagation();
+        el.style.background = "var(--primary-container)";
+        el.style.outline = "2px solid var(--primary)";
+        if (tip) tip.style.opacity = 1;
+      }));
+      ["dragleave", "dragend"].forEach((t) => el.addEventListener(t, () => {
+        reset();
+        if (tip) tip.style.opacity = 0;
+      }));
+
+      el.addEventListener("click", async () => {
+        if (el.dataset.busy) return;
+        if (wantConfirm() && !confirm(`提取 ${part} 分区到电脑？\n\n需要手机在 TWRP 或已 root；文件存到 backups/。`)) return;
+        el.dataset.busy = "1";
+        setTip("提取中…");
+        setMeta(`正在提取 ${part} 分区…`);
+        try {
+          const d = await (await fetch("/api/extract?part=" + encodeURIComponent(part))).json();
+          if (d.ok) {
+            setMeta(`✅ 已提取 ${part} → ${d.name || "备份文件"}（${MB(d.size)}），已在资源管理器打开`);
+            setTip("✅ 已提取");
+          } else {
+            setMeta(`❌ ${d.error || "提取失败"}`);
+            setTip("❌ 失败");
+          }
+        } catch (e) {
+          setMeta("❌ 后端未响应");
+          setTip("❌ 失败");
+        } finally {
+          delete el.dataset.busy;
+        }
+      });
+
+      el.addEventListener("drop", async (e) => {
+        e.preventDefault(); e.stopPropagation();
+        reset();
+        const f = e.dataTransfer.files[0];
+        if (!f) return;
+        if (!/\.img$/i.test(f.name)) { setMeta(`❌ ${f.name} 不是 .img，刷入只认镜像文件`); setTip("❌ 不是 img"); return; }
+        if (wantConfirm() && !confirm(`把 ${f.name}（${MB(f.size)}）刷进 ${part} 分区？\n\n写错分区可能让手机开不了机。`)) return;
+        setTip("刷入中…");
+        setMeta(`正在刷 ${part} ← ${f.name}（${MB(f.size)}）`);
+        try {
+          const r = await fetch("/api/flash?part=" + encodeURIComponent(part), {
+            method: "POST", headers: { "X-Filename": encodeURIComponent(f.name) }, body: f,
+          });
+          const d = await r.json();
+          if (d.ok) {
+            setMeta(`✅ ${part} 刷入成功（${d.mode}）`);
+            setTip("✅ 已刷入");
+          } else {
+            setMeta(`❌ ${d.error || d.log || "刷入失败"}`);
+            setTip("❌ 失败");
+          }
+        } catch (err) {
+          setMeta("❌ 后端未响应");
+          setTip("❌ 失败");
+        }
+      });
+    }
+
+    document.getElementById("parts").replaceChildren(
+      ...PARTS.map(([p, d, risky]) => partTile(p, d, risky)));
+
+    let partsLoaded = false;
+    document.getElementById("moreParts").addEventListener("toggle", async (ev) => {
+      if (!ev.target.open || partsLoaded) return;
+      partsLoaded = true;
+      const box = document.getElementById("allParts");
+      box.innerHTML = '<div class="empty" style="padding:12px">读取中…</div>';
+      try {
+        const d = await (await fetch("/api/partitions")).json();
+        if (!d.ok) { box.innerHTML = `<div class="empty" style="padding:12px">${d.error || "读取失败"}</div>`; return; }
+        const rows = d.parts.map((p) => {
+          const row = document.createElement("div");
+          row.className = "fl allp";
+          row.dataset.part = p;
+          row.style.cssText = "border-radius:12px;border:0;background:var(--surface-c)";
+          row.innerHTML = `<span class="em">💽</span><span class="nm">${p}</span>
+            <span class="tip" style="font-size:11px;color:var(--on-surface-var);font-family:Consolas,monospace">点击提取 · 拖入刷写</span>`;
+          bindPart(row, p);
+          return row;
+        });
+        box.replaceChildren(...rows);
+      } catch (err) {
+        box.innerHTML = '<div class="empty" style="padding:12px">后端未响应</div>';
+      }
+    });
+
+    fetch("/api/state").then(r => r.json()).then(d => {
+      const c = document.getElementById("fbChip");
+      const m = d.mode;
+      if (m === "fastboot") { c.textContent = "Fastboot · 可刷入"; c.className = "chip mode-fastboot"; }
+      else if (m === "twrp") { c.textContent = "TWRP · 可 dd 刷入"; c.className = "chip mode-twrp"; }
+      else if (m === "adb") { c.textContent = "系统模式 · 需进 Fastboot"; c.className = "chip mode-adb"; }
+      else { c.textContent = "未连接"; c.className = "chip"; }
+      const hint = document.getElementById("flashHint");
+      if (hint && m === "adb") {
+        hint.insertAdjacentHTML("afterbegin",
+          '<div style="color:var(--warn);margin-bottom:8px;font-size:12px">当前是普通系统模式：刷入需要 Fastboot（或进 TWRP 用 dd）。提取也需 TWRP / root。</div>');
+      }
+    });
+    </script>
+  </section>
+  <section class="page" id="page-files" hidden>
+    <div class="statusbar-strip">
+      <div class="sb-main">
+        <div class="model" id="fpPath" style="font-size:17px">/sdcard</div>
+        <div class="meta" id="fpMeta">读取中…</div>
+      </div>
+      <button class="btn outline" id="fpUp" style="height:34px;padding:0 14px">↑ 上级</button>
+      <button class="btn tonal" id="fpRefresh" style="height:34px;padding:0 14px">刷新</button>
+    </div>
+    <div class="list" id="fpList"></div>
+    <div class="dropzone" id="fpDrop">⬇ 把电脑上的文件拖到这里，直接上传到手机当前目录</div>
+  </section>
+  <section class="page" id="page-tools" hidden>
+    <div class="statusbar-strip">
+      <div class="sb-main">
+        <div class="model" style="font-size:19px">常用命令</div>
+        <div class="meta">点一下直接执行，结果会跳到 ADB 终端里</div>
+      </div>
+    </div>
+    <div class="tiles" id="cmdBtns"></div>
+  </section>
+
+  <section class="page" id="page-adb" hidden>
+    <div class="statusbar-strip">
+      <div class="sb-main">
+        <div class="model" style="font-size:19px">ADB 终端</div>
+        <div class="meta">输入 shell 命令；也可以写 `adb devices` 这种完整命令</div>
+      </div>
+      <button class="btn outline" id="termFs" style="height:34px;padding:0 14px">全屏</button>
+      <button class="btn tonal" id="termClear" style="height:34px;padding:0 14px">清屏</button>
+    </div>
+    <div id="term" class="term"></div>
+    <div class="termline">
+      <span class="ps1">$</span>
+      <input id="termIn" spellcheck="false" autocomplete="off" placeholder="getprop ro.product.model">
+      <button class="btn" id="termRun" style="height:36px;padding:0 18px">执行</button>
+    </div>
+    <div id="termHint" class="term-hint" hidden></div>
+    <div class="quick" id="termQuick"></div>
+  </section>
+  <section class="page" id="page-ai" hidden>
+    <div class="statusbar-strip">
+      <div class="sb-main">
+        <div class="model" style="font-size:19px">AI 助手</div>
+        <div class="meta" id="aiMeta">说人话刷机 · DeepSeek · Key 加密存在本机</div>
+      </div>
+      <div class="chip key-chip" id="aiKeyChip" title="点这里设置 / 更换 DeepSeek API Key">🔑 设置 API Key</div>
+      <button class="btn tonal" id="aiNew" title="清空上下文，重新开始" style="height:34px;padding:0 14px">新对话</button>
+    </div>
+
+    <div class="card" id="aiKeyCard" hidden style="margin-bottom:14px">
+      <div class="t" style="font-size:14px;font-weight:600">DeepSeek API Key</div>
+      <div class="h" style="font-size:12px;color:var(--on-surface-var);margin-top:3px">
+        sk- 开头；只存本机，磁盘上是密文（Windows DPAPI，换电脑就得重填）
+      </div>
+      <div class="key-row">
+        <input id="aiKeyIn" class="key-in" type="password" spellcheck="false" autocomplete="off"
+               placeholder="sk-… 粘贴到这里">
+        <button class="btn" id="aiKeySave" style="height:40px;padding:0 20px">保存</button>
+      </div>
+      <div class="key-row" style="margin-top:10px">
+        <button class="btn tonal" id="aiKeyTest" style="height:34px;padding:0 14px">测试连接</button>
+        <button class="btn danger" id="aiKeyClear" style="height:34px;padding:0 14px">删除 Key</button>
+        <span id="aiKeyTip" style="font-size:12px;color:var(--on-surface-var)"></span>
+      </div>
+    </div>
+
+    <div class="ai-chat" id="aiChat"></div>
+
+    <div class="ai-composer">
+      <span class="mark">✨</span>
+      <input id="aiIn" spellcheck="false" autocomplete="off" placeholder="说一句要干什么，比如：把 downloads 里的官方包刷进去">
+      <button class="btn ai-send" id="aiSend" title="发送（Enter）">↑</button>
+    </div>
+    <div class="quick" id="aiQuick"></div>
+    <div class="ai-foot">
+      <label class="toggle"><input type="checkbox" id="aiDeep"><span>🧠 深度思考</span></label>
+      <label class="toggle"><input type="checkbox" id="aiRisky"><span>⚡ 直接执行</span></label>
+      <span style="font-size:11.5px;color:var(--on-surface-var)">
+        深度思考＝先想再做并显示思考过程；直接执行＝危险操作不问你
+      </span>
+    </div>
+  </section>
+
+  <section class="page" id="page-img" hidden>
+    <div class="statusbar-strip">
+      <div class="sb-main">
+        <div class="model" style="font-size:19px">IMG 解包 / 编辑 / 重打包</div>
+        <div class="meta" id="imgMeta">选一个 boot.img / recovery.img，解开改 ramdisk，再打回去</div>
+      </div>
+      <div class="chip" id="imgChip">未选择</div>
+      <button class="btn outline" id="imgRescan" style="height:34px;padding:0 14px">刷新列表</button>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div id="imgList" class="img-list">
+        <div class="empty" style="padding:12px">扫描中…</div>
+      </div>
+      <div class="dropzone" id="imgDrop" style="margin-top:10px">⬇ 把 .img 拖到这里（存到 downloads/img_work/）</div>
+    </div>
+
+    <div class="card" id="imgInfoCard" hidden style="margin-bottom:14px">
+      <div class="field" style="border:0;padding-top:0;padding-bottom:0">
+        <div style="min-width:0">
+          <div class="t" id="imgTitle">—</div>
+          <div class="h" id="imgSub">—</div>
+        </div>
+        <div style="display:flex;gap:8px;flex:none">
+          <button class="btn" id="imgUnpack" style="height:34px;padding:0 16px">解包</button>
+          <button class="btn tonal" id="imgRepack" style="height:34px;padding:0 16px" disabled>重打包</button>
+          <button class="btn outline" id="imgFlash" style="height:34px;padding:0 14px" disabled>刷入分区</button>
+        </div>
+      </div>
+      <div class="img-kv" id="imgKv"></div>
+    </div>
+
+    <div class="img-work" id="imgWork" hidden>
+      <div class="card">
+        <div class="img-tree-head">
+          <b style="font-size:13px">ramdisk 文件</b>
+          <span id="imgTreeCount" style="font-size:11.5px;color:var(--on-surface-var)"></span>
+        </div>
+        <div id="imgTree" class="img-tree-body"></div>
+      </div>
+      <div class="card">
+        <div class="img-tree-head">
+          <b id="imgFileName" style="font-size:13px">点左边的文件开始编辑</b>
+          <button class="btn tonal" id="imgSaveFile" style="height:30px;padding:0 14px" disabled>保存</button>
+        </div>
+        <textarea id="imgEditor" spellcheck="false" placeholder="这里显示文件内容，改完点保存，再点上面的「重打包」" disabled></textarea>
+        <div id="imgEditTip" style="margin-top:6px;font-size:12px;color:var(--on-surface-var)"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="page-settings" hidden>
+    <h2>设置</h2><p class="sub">个性化偏好存在本机（localStorage），下次打开还在。</p>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="field">
+        <div><div class="t">主题</div><div class="h">跟随系统或手动锁定</div></div>
+        <div class="seg" id="segTheme">
+          <button data-v="light">浅色</button><button data-v="dark">深色</button><button data-v="system">跟随</button>
+        </div>
+      </div>
+      <div class="field" style="border:0;padding-bottom:4px">
+        <div><div class="t">强调色</div><div class="h">影响按钮、选中态和环形图</div></div>
+      </div>
+      <div class="swatches" id="swatches">
+        <button class="sw" data-a="purple" style="background:#6750A4"></button>
+        <button class="sw" data-a="blue" style="background:#1F5AA6"></button>
+        <button class="sw" data-a="green" style="background:#2E6B4F"></button>
+        <button class="sw" data-a="orange" style="background:#8A4F00"></button>
+        <button class="sw" data-a="pink" style="background:#8B4A6B"></button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <div><div class="t">界面动效</div><div class="h">关闭后切页直接跳转，动画全部停用</div></div>
+        <button class="btn tonal" id="btnMotion" style="height:34px;padding:0 18px">开</button>
+      </div>
+      <div class="field">
+        <div><div class="t">终端配色</div><div class="h">ADB 终端里命令与报错的颜色</div></div>
+        <div style="display:flex;gap:14px;align-items:center">
+          <label style="font-size:12px;color:var(--on-surface-var)">命令
+            <input type="color" id="colCmd" style="width:34px;height:28px;border:0;background:none;border-radius:8px;vertical-align:middle">
+          </label>
+          <label style="font-size:12px;color:var(--on-surface-var)">报错
+            <input type="color" id="colErr" style="width:34px;height:28px;border:0;background:none;border-radius:8px;vertical-align:middle">
+          </label>
+        </div>
+      </div>
+      <div class="field">
+        <div><div class="t">危险操作确认</div><div class="h">关闭后刷分区、删文件等不再弹确认框</div></div>
+        <button class="btn tonal" id="btnConfirm" style="height:34px;padding:0 18px">开</button>
+      </div>
+      <div class="field">
+        <div><div class="t">磁贴大小</div><div class="h">小 / 中 / 大，影响一列能排几块</div></div>
+        <div class="seg" id="segTile">
+          <button data-s="86">小</button><button data-s="102">中</button><button data-s="132">大</button>
+        </div>
+      </div>
+      <div class="field" style="border:0">
+        <div><div class="t">自动刷新</div><div class="h">设备状态轮询间隔</div></div>
+        <div class="seg" id="segRefresh">
+          <button data-r="0">关</button><button data-r="5000">5s</button><button data-r="10000">10s</button><button data-r="30000">30s</button>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--on-surface-var)">
+        小米6 工具箱 · Web UI v1.0
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="field" style="border:0;padding-bottom:6px">
+        <div><div class="t">关于</div><div class="h">小米6（sagit）刷机与维护工具箱</div></div>
+      </div>
+      <div style="font-size:12.5px;line-height:1.9;color:var(--on-surface-var)">
+        由 <b style="color:var(--primary)">DeepSeek</b> 编写<br>
+        界面：Material 3 · 本地 Web UI（Edge 应用模式）<br>
+        后端：Python 标准库 + adb / fastboot<br>
+        版本：v1.0 · 数据全部留在本机，不联网上传
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="bye" hidden>
+  <div class="bye-mark">6</div>
+  <div class="bye-t">服务已停止</div>
+  <div class="bye-h">这个窗口可以关掉了。<br>下次要用，再双击文件夹里的 <b>启动.bat</b>。</div>
+</div>
+
+<dialog id="apkDlg">
+  <div class="dlg-head">
+    <div style="flex:1;min-width:0">
+      <div class="t">装应用</div>
+      <div class="h" id="apkMeta">读取 apk/ 文件夹…</div>
+    </div>
+    <button class="btn outline" id="apkOpen" style="height:34px;padding:0 14px">打开文件夹</button>
+    <button class="btn tonal" id="apkClose" style="height:34px;padding:0 14px">关闭</button>
+  </div>
+  <div id="apkList" class="infolist"></div>
+  <div class="dropzone" id="apkDrop" style="margin-top:12px">⬇ 把 .apk 拖到这里直接安装</div>
+</dialog>
+
+<nav>
+  <button class="tab active" data-page="home">
+    <span class="ico">📊</span>概览</button>
+  <button class="tab" data-page="flash">
+    <span class="ico">⚡</span>刷机</button>
+  <button class="tab" data-page="img">
+    <span class="ico">🧬</span>IMG</button>
+  <button class="tab" data-page="files">
+    <span class="ico">📁</span>文件</button>
+  <button class="tab" data-page="tools">
+    <span class="ico">🛠️</span>工具</button>
+  <button class="tab" data-page="adb">
+    <span class="ico">💻</span>ADB</button>
+  <button class="tab" data-page="ai">
+    <span class="ico">✨</span>AI</button>
+  <button class="tab" data-page="settings">
+    <span class="ico">⚙️</span>设置</button>
+</nav>
+
+<script>
+const $ = (s) => document.querySelector(s);
+// 拖文件到窗口别的地方时，别让 Edge 直接打开那个文件把界面顶掉
+["dragover", "drop"].forEach((t) => window.addEventListener(t, (e) => {
+  if (!e.defaultPrevented) e.preventDefault();
+}));
+// 字节数转人话（仪表盘、文件页、IMG 页都用它，所以放在最前面）
+const human = (n) => n > 1073741824 ? (n / 1073741824).toFixed(1) + " GB"
+  : n > 1048576 ? (n / 1048576).toFixed(1) + " MB" : n > 1024 ? Math.round(n / 1024) + " KB" : n + " B";
+const fmtUp = (s) => {
+  s = Math.round(s || 0);
+  if (!s) return "--";
+  const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+  return d ? `${d} 天 ${h} 小时` : (h ? `${h} 小时 ${m} 分` : `${m} 分`);
+};
+const STATUS = { "2": "充电中", "3": "放电中", "4": "未充电", "5": "已充满" };
+
+let LAST_MODE = "none";
+let PAGE_BUILD = null;
+function render(d) {
+  // 前端文件被改过就自动刷新，省得手动按 F5
+  if (d.build) {
+    if (PAGE_BUILD && d.build !== PAGE_BUILD) { location.reload(); return; }
+    PAGE_BUILD = d.build;
+  }
+  LAST_MODE = d.mode || "none";
+  const on = d.connected;
+  const MODES = { adb: "系统模式", twrp: "TWRP 模式", fastboot: "Fastboot 模式", recovery: "恢复模式",
+    sideload: "Sideload 模式", unauthorized: "待授权", offline: "离线" };
+  const ex = d.extra || {};
+  const b = d.battery || {};
+  const s = d.storage || {};
+
+  // 顶栏
+  $("#devChip").className = "chip" + (on ? " mode-" + (d.mode || "adb") : "");
+  $("#devText").textContent = on ? `${d.model} · 已连接 · ${MODES[d.mode] || "未知模式"}` : "未连接";
+
+  // 设备卡
+  $("#model").textContent = on ? (d.model || "未知机型") : "未连接设备";
+  $("#meta").textContent = on
+    ? `${d.rom || "—"} · Android ${d.android || "?"} · ${d.codename || "?"}`
+    : (d.note || "插上线看看");
+  $("#modeChip").textContent = on ? (d.modeLabel || MODES[d.mode] || "已连接") : "未连接";
+  $("#modeChip").className = "chip" + (on ? " mode-" + (d.mode || "adb") : "");
+  $("#serialChip").textContent = d.serial ? "SN " + d.serial : "SN —";
+  const bl = d.unlocked === true ? ["BL 已解锁", "chip ok"] : d.unlocked === false ? ["BL 未解锁", "chip"] : ["BL 未知", "chip"];
+  $("#blChip").textContent = bl[0];
+  $("#blChip").className = bl[1];
+  $("#rootChip").textContent = d.root ? "已 Root" : "未 Root";
+  $("#rootChip").className = "chip" + (d.root ? " ok" : "");
+
+  // 设备卡中间的状态提示（把空白填上，也给点真正有用的提醒）
+  const notes = [];
+  if (!on) {
+    notes.push(["bad", d.note || "手机没连上：插数据线 / 开 USB 调试 / 进 Fastboot"]);
+  } else {
+    if (d.unlocked === false) notes.push(["bad", "BL 未解锁：fastboot 刷机用不了，先去申请解锁"]);
+    if (!d.root) notes.push(["warn", "未 root：面具、TWRP 相关功能有限制"]);
+    if ((b.level ?? 100) < 20) notes.push(["bad", "电量低于 20%，刷机前先充电，别中途断电"]);
+    if ((b.temp ?? 0) >= 44) notes.push(["warn", "温度偏高，别边快充边刷"]);
+    if (!notes.length) notes.push(["ok", "状态正常，可以开始折腾了"]);
+  }
+  $("#heroNote").replaceChildren(...notes.slice(0, 2).map(([kind, text]) => {
+    const row = document.createElement("div");
+    const dot = document.createElement("i");
+    dot.className = kind;
+    const span = document.createElement("span");
+    span.textContent = text;
+    row.append(dot, span);
+    return row;
+  }));
+
+  // 电量环
+  const lvl = b.level ?? null;
+  const pct = lvl === null ? 0 : Math.max(0, Math.min(100, lvl));
+  $("#batVal").textContent = lvl === null ? "--" : lvl + "%";
+  $("#batCap").textContent = lvl === null ? "电量" : (STATUS[b.status] || "电量");
+  const ringColor = pct <= 20 ? "var(--error)" : pct <= 40 ? "#C08A00" : "var(--primary)";
+  $("#batRing").style.background =
+    `conic-gradient(${ringColor} ${pct * 3.6}deg, var(--surface-c-high) 0deg)`;
+  const volt = parseFloat(b.voltage);
+  $("#batVolt").textContent = lvl === null ? "—"
+    : ([volt ? (volt / 1000).toFixed(3) + " V" : "", b.technology || ""].filter(Boolean).join(" · ") || "—");
+
+  // 温度
+  const t = b.temp ?? null;
+  $("#tempVal").textContent = t === null ? "--" : t.toFixed(1);
+  $("#tempVal").style.color = t === null ? "" : t < 38 ? "var(--success)" : t < 44 ? "var(--warn)" : "var(--error)";
+  $("#tempCap").textContent = t === null ? "—" : t < 44 ? "正常" : "偏热，别边充边刷";
+
+  // 存储
+  $("#stoVal").textContent = s.pct != null ? s.pct + "%" : "--";
+  $("#stoFill").style.width = (s.pct != null ? s.pct : 0) + "%";
+  $("#stoCap").textContent = s.pct != null ? `${s.used} / ${s.size} · 剩 ${s.avail}` : "—";
+
+  // 内存
+  const memT = ex.memTotal || 0;
+  const memA = ex.memAvail || 0;
+  if (memT > 0) {
+    const used = Math.max(0, memT - memA);
+    const mp = Math.round(used / memT * 100);
+    $("#memVal").textContent = mp + "%";
+    $("#memFill").style.width = mp + "%";
+    $("#memCap").textContent = `${human(used)} / ${human(memT)}`;
+  } else {
+    $("#memVal").textContent = "--";
+    $("#memFill").style.width = "0%";
+    $("#memCap").textContent = "—";
+  }
+
+  // 运行时长 + 右侧小格
+  $("#upVal").textContent = fmtUp(d.uptime);
+  $("#upCap").textContent = d.uptime ? "自上次开机" : "—";
+  $("#kMagisk").textContent = d.magisk || "—";
+  $("#kTwrp").textContent = d.twrp || "—";
+  $("#kPart").textContent = d.partitions ? d.partitions + " 个" : "—";
+  $("#appsVal").textContent = ex.apps ? ex.apps + " 个" : "—";
+
+  // 系统信息
+  const rows = [
+    ["机型", `${d.model || "—"}（${d.codename || "?"}）`],
+    ["系统版本", d.rom || "—"],
+    ["Android", d.android || "—"],
+    ["安全补丁", ex.securityPatch || "—"],
+    ["内核", ex.kernel || "—"],
+    ["平台", [ex.soc, ex.abi].filter(Boolean).join(" · ") || "—"],
+    ["分辨率", ex.screen ? `${ex.screen}${ex.density ? " @" + ex.density + "dpi" : ""}` : "—"],
+    ["Bootloader", d.unlocked === true ? "已解锁" : d.unlocked === false ? "未解锁" : "未知"],
+    ["Root", d.root ? (d.magisk ? "Magisk " + d.magisk : "已 Root") : "未 Root"],
+    ["TWRP", d.twrp || "未安装"],
+    ["序列号", d.serial || "—"],
+    ["运营商", ex.sim || "—"],
+  ];
+  $("#sysList").replaceChildren(...rows.map(([k, v]) => {
+    const row = document.createElement("div");
+    row.className = "kv-row";
+    const key = document.createElement("b");
+    key.textContent = k;
+    const val = document.createElement("span");
+    val.textContent = v;
+    val.title = v;
+    row.append(key, val);
+    return row;
+  }));
+}
+
+async function load() {
+  try {
+    const r = await fetch("/api/state", { cache: "no-store" });
+    render(await r.json());
+  } catch (e) {
+    $("#devText").textContent = "后端未响应";
+    $("#devChip").className = "chip";
+    $("#meta").textContent = "服务可能已退出：重新双击 启动.bat 即可";
+  }
+}
+
+// 波纹
+document.addEventListener("pointerdown", (e) => {
+  const el = e.target.closest(".btn,.tab");
+  if (!el) return;
+  const r = el.getBoundingClientRect();
+  const s = Math.max(r.width, r.height);
+  const sp = document.createElement("span");
+  sp.className = "ripple";
+  sp.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX - r.left - s / 2}px;top:${e.clientY - r.top - s / 2}px`;
+  el.appendChild(sp);
+  setTimeout(() => sp.remove(), 560);
+});
+
+// 页面切换
+document.querySelectorAll(".tab").forEach((btn) => {
+  btn.addEventListener("click", () => goTab(btn.dataset.page));
+});
+
+$("#refresh").addEventListener("click", load);
+
+/* 顶部「关闭」：停掉本地服务并关窗 */
+$("#quitBtn").onclick = async () => {
+  if (!confirm("停止工具箱服务并关掉窗口？\n\n手机不受影响；下次用再双击 启动.bat。")) return;
+  try { await fetch("/api/quit", { method: "POST" }); } catch (e) { /* 服务已经退了也正常 */ }
+  const bye = $("#bye");
+  bye.hidden = false;
+  setTimeout(() => { try { window.close(); } catch (e) { /* 有些窗口不允许脚本关闭 */ } }, 400);
+};
+
+/* 点终端页任何地方都能直接开始打字 */
+$("#page-adb").addEventListener("click", (e) => {
+  if (e.target.closest("button, input")) return;
+  const i = $("#termIn");
+  if (i) i.focus();
+});
+
+/* ---------------- 偏好设置 ---------------- */
+const ACCENTS = {
+  purple: {"primary":"#6750A4","primary-container":"#EADDFF","on-primary-container":"#21005D","secondary-container":"#E8DEF8","on-secondary-container":"#1D192B"},
+  blue:   {"primary":"#1F5AA6","primary-container":"#D7E3FF","on-primary-container":"#001B3D","secondary-container":"#D8E2F8","on-secondary-container":"#101C2B"},
+  green:  {"primary":"#2E6B4F","primary-container":"#C6F0DA","on-primary-container":"#00210F","secondary-container":"#CDEBDC","on-secondary-container":"#08201A"},
+  orange: {"primary":"#8A4F00","primary-container":"#FFDCC2","on-primary-container":"#2B1700","secondary-container":"#FFE0C9","on-secondary-container":"#2B1700"},
+  pink:   {"primary":"#8B4A6B","primary-container":"#FFD8E8","on-primary-container":"#3A0B22","secondary-container":"#FBD8E6","on-secondary-container":"#3A0B22"}
+};
+const DEF = {theme:"system", accent:"purple", motion:"on", refresh:5000, tile:102, confirm:true,
+  colCmd:"#D0BCFF", colErr:"#F2B8B5"};
+
+// 心跳：窗口关掉后后端自己退出（bye 是关窗时发的一次性信号）
+setInterval(() => fetch("/api/heartbeat", { cache: "no-store" }).catch(() => {}), 3000);
+window.addEventListener("pagehide", () => navigator.sendBeacon?.("/api/bye"));
+
+// 开屏
+window.addEventListener("load", () => {
+  setTimeout(() => document.getElementById("splash")?.classList.add("hide"), 620);
+});
+let P = Object.assign({}, DEF, JSON.parse(localStorage.getItem("mi6prefs") || "{}"));
+let timer = null;
+const save = () => localStorage.setItem("mi6prefs", JSON.stringify(P));
+
+function applyPrefs() {
+  const dark = P.theme === "dark" ||
+    (P.theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  const root = document.documentElement;
+  root.dataset.theme = dark ? "dark" : "light";
+  root.dataset.motion = P.motion;
+  Object.entries(ACCENTS[P.accent] || ACCENTS.purple).forEach(([k, v]) => root.style.setProperty("--" + k, v));
+  root.style.setProperty("--tile-min", (P.tile || 102) + "px");
+  root.style.setProperty("--term-cmd", P.colCmd || "#D0BCFF");
+  root.style.setProperty("--term-err", P.colErr || "#F2B8B5");
+  if ($("#colCmd")) $("#colCmd").value = P.colCmd || "#D0BCFF";
+  if ($("#colErr")) $("#colErr").value = P.colErr || "#F2B8B5";
+
+  document.querySelectorAll("#segTheme button").forEach(b => b.classList.toggle("on", b.dataset.v === P.theme));
+  document.querySelectorAll("#segTile button").forEach(b => b.classList.toggle("on", +b.dataset.s === P.tile));
+  document.querySelectorAll("#segConfirm button");
+  const bc = $("#btnConfirm");
+  if (bc) bc.textContent = P.confirm === false ? "关" : "开";
+  document.querySelectorAll("#segRefresh button").forEach(b => b.classList.toggle("on", +b.dataset.r === P.refresh));
+  document.querySelectorAll(".sw").forEach(b => b.classList.toggle("on", b.dataset.a === P.accent));
+  $("#btnMotion").textContent = P.motion === "on" ? "开" : "关";
+
+  clearInterval(timer);
+  if (P.refresh > 0) timer = setInterval(load, P.refresh);
+}
+
+document.querySelectorAll("#segTheme button").forEach(b => b.onclick = () => { P.theme = b.dataset.v; save(); applyPrefs(); });
+document.querySelectorAll("#segRefresh button").forEach(b => b.onclick = () => { P.refresh = +b.dataset.r; save(); applyPrefs(); });
+document.querySelectorAll("#segTile button").forEach(b => b.onclick = () => { P.tile = +b.dataset.s; save(); applyPrefs(); });
+document.querySelectorAll(".sw").forEach(b => b.onclick = () => { P.accent = b.dataset.a; save(); applyPrefs(); });
+$("#btnMotion").onclick = () => { P.motion = P.motion === "on" ? "off" : "on"; save(); applyPrefs(); };
+$("#btnConfirm").onclick = () => { P.confirm = P.confirm === false; save(); applyPrefs(); };
+$("#colCmd").oninput = (e) => { P.colCmd = e.target.value; save(); applyPrefs(); };
+$("#colErr").oninput = (e) => { P.colErr = e.target.value; save(); applyPrefs(); };
+
+/* ---------------- 概览三个按钮 ---------------- */
+function goTab(key) {
+  document.querySelectorAll(".tab").forEach((b) => b.classList.toggle("active", b.dataset.page === key));
+  document.querySelectorAll(".page").forEach((p) => {
+    const show = p.id === "page-" + key;
+    p.hidden = !show;
+    if (show) { p.style.animation = "none"; void p.offsetWidth; p.style.animation = ""; }
+  });
+  document.querySelector("main").scrollTo({ top: 0, behavior: "smooth" });
+  try { history.replaceState(null, "", "#" + key); } catch (e) { /* file:// 之类 */ }
+  if (key === "files") fpLoad();
+  if (key === "flash") romScan();
+  if (key === "img") imgScan();
+  if (key === "ai") aiLoadState(true);
+  if (key === "adb") setTimeout(() => { const i = $("#termIn"); if (i) i.focus(); }, 60);
+}
+const homeBtns = document.querySelectorAll("#page-home .actions .btn");
+const setFlashMeta = (t) => { const el = document.getElementById("flashMeta"); if (el) el.textContent = t; };
+if (homeBtns.length >= 3) {
+  homeBtns[0].onclick = () => {                                // 刷入 TWRP
+    goTab("flash");
+    setFlashMeta("进 Fastboot 后，把 twrp-*.img 拖到 recovery 磁贴上");
+  };
+  homeBtns[1].onclick = () => {                                // 备份分区
+    goTab("flash");
+    setFlashMeta("单击任意分区磁贴 = 把该分区提取到 backups/（需要 TWRP 或 root）");
+  };
+  homeBtns[2].onclick = () => {                                // 装应用
+    apkDlg.showModal();
+    apkLoad();
+  };
+}
+
+/* ---------------- Tab 自动补全（走后端，能补属性/服务/包名/手机路径） ---------------- */
+const KNOWN = ["getprop", "setprop", "pm", "am", "dumpsys", "logcat", "wm", "df", "du", "ls", "cd", "cat",
+  "reboot", "input", "settings", "screencap", "screenrecord", "uname", "uptime", "su", "top", "ps", "adb"];
+
+let tabState = { items: [], i: 0, applied: null };
+
+function tabApply(text) {
+  const inp = $("#termIn");
+  inp.value = text;
+  inp.focus();
+  inp.setSelectionRange(text.length, text.length);
+  tabState.applied = text;
+}
+
+function tabHint(items) {
+  const box = $("#termHint");
+  if (!box) return;
+  if (!items || items.length < 2) {
+    box.hidden = true;
+    box.textContent = "";
+    return;
+  }
+  const show = items.slice(0, 8).join("   ");
+  box.hidden = false;
+  box.textContent = `候选 ${items.length} 个：${show}${items.length > 8 ? " …" : ""}（继续按 Tab 翻）`;
+}
+
+async function complete() {
+  const inp = $("#termIn");
+  const cur = inp.value;
+  // 连着按 Tab：在候选里往下翻（注意：只有 1 个候选时要继续往下补，不能原地打转）
+  if (tabState.items.length > 1 && tabState.applied === cur) {
+    tabState.i = (tabState.i + 1) % tabState.items.length;
+    tabApply(tabState.items[tabState.i]);
+    tabHint(tabState.items);
+    return;
+  }
+  let items = [];
+  try {
+    const d = await (await fetch("/api/complete?line=" + encodeURIComponent(cur))).json();
+    items = d.items || [];
+  } catch (e) {
+    items = [];
+  }
+  if (!items.length && !cur.includes(" ")) {   // 后端没响应就退回本地命令表
+    items = KNOWN.filter((k) => k.startsWith(cur)).map((k) => k + " ");
+  }
+  if (!items.length) {
+    tabState = { items: [], i: 0, applied: null };
+    tabHint([]);
+    return;
+  }
+  tabState = { items, i: 0, applied: null };
+  tabApply(items[0]);
+  tabHint(items);
+}
+
+$("#termIn").addEventListener("input", () => {
+  if ($("#termIn").value !== tabState.applied) {
+    tabState = { items: [], i: 0, applied: null };
+    tabHint([]);
+  }
+});
+
+const termHist = [];
+let histIdx = -1;                       // -1 = 没在翻历史
+$("#termIn").addEventListener("keydown", (e) => {
+  if (e.key === "Tab") { e.preventDefault(); complete(); return; }
+  if (e.key === "Enter") { e.preventDefault(); termExec(); return; }
+  if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+    if (!termHist.length) return;
+    e.preventDefault();
+    if (e.key === "ArrowUp") histIdx = histIdx < 0 ? termHist.length - 1 : Math.max(0, histIdx - 1);
+    else if (histIdx < 0) return;
+    else histIdx += 1;
+    if (histIdx >= termHist.length) { histIdx = -1; $("#termIn").value = ""; return; }
+    $("#termIn").value = termHist[histIdx];
+    $("#termIn").setSelectionRange($("#termIn").value.length, $("#termIn").value.length);
+  }
+});
+$("#termRun").onclick = () => termExec();
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (P.theme === "system") applyPrefs(); });
+
+/* ---------------- ADB 终端 ---------------- */
+const CMDS = [
+  ["设备型号", "getprop ro.product.model"],
+  ["Android 版本", "getprop ro.build.version.release"],
+  ["BL 解锁状态", "getprop ro.boot.flash.locked"],
+  ["电池信息", "dumpsys battery"],
+  ["已装应用(三方)", "pm list packages -3"],
+  ["存储占用", "df -h /data"],
+  ["重启到系统", "", "system"],
+  ["进入 Recovery", "", "recovery"],
+  ["进 Fastboot", "", "bootloader"],
+  ["关机", "", "poweroff"],
+];
+const QUICK = ["getprop ro.product.device", "wm size", "dumpsys battery", "df -h /data", "pm list packages -3", "uname -a", "logcat -d -t 80", "adb devices"];
+
+function termAppend(text, cls) {
+  const box = $("#term");
+  const d = document.createElement("div");
+  d.className = cls;
+  d.textContent = text;
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+}
+
+async function termExec(cmd) {
+  cmd = (cmd || $("#termIn").value || "").trim();
+  if (!cmd) return;
+  if (termHist[termHist.length - 1] !== cmd) termHist.push(cmd);
+  histIdx = -1;
+  tabState = { items: [], i: 0, applied: null };
+  tabHint([]);
+  termAppend("$ " + cmd, "l-cmd");
+  $("#termIn").value = "";
+  termAppend("执行中…", "l-dim");
+  try {
+    const r = await fetch("/api/adb", { method: "POST", body: cmd });
+    const d = await r.json();
+    const box = $("#term");
+    const last = box.lastElementChild;
+    if (last && last.className === "l-dim") last.remove();
+    if (d.error) termAppend(d.error, "l-err");
+    else if (d.out) termAppend(d.out, d.ok ? "l-out" : "l-err");
+    else termAppend(d.ok ? "(无输出)" : `(退出码 ${d.code})`, d.ok ? "l-dim" : "l-err");
+  } catch (e) {
+    termAppend("后端未响应（服务可能已经退出，重新双击 启动.bat）", "l-err");
+  }
+}
+
+$("#termClear").onclick = () => { $("#term").innerHTML = ""; };
+$("#termFs").onclick = () => {
+  const p = $("#page-adb");
+  if (!document.fullscreenElement) p.requestFullscreen?.(); else document.exitFullscreen?.();
+};
+document.getElementById("cmdBtns").innerHTML = CMDS.map(([n, c, act]) =>
+  `<div class="tile" data-cmd="${c || ""}" data-act="${act || ""}" style="aspect-ratio:auto;min-height:88px;cursor:pointer">
+     <div class="em" style="font-size:17px">${act ? "⏻" : "⌨️"}</div>
+     <div><div class="tv sm">${n}</div><div class="tl" style="font-family:Consolas,monospace;overflow:hidden;text-overflow:ellipsis">${act ? "自动选通道" : c}</div></div>
+   </div>`).join("");
+document.querySelectorAll("#cmdBtns .tile").forEach((el) => el.onclick = () => {
+  document.querySelectorAll(".tab").forEach((b) => b.classList.remove("active"));
+  document.querySelector('.tab[data-page="adb"]').classList.add("active");
+  document.querySelectorAll(".page").forEach((p) => (p.hidden = p.id !== "page-adb"));
+  const act = el.dataset.act;
+  if (act) {
+    termAppend(`$ 重启 → ${act}（自动选择 fastboot / adb 通道）`, "l-cmd");
+    fetch("/api/reboot?to=" + encodeURIComponent(act))
+      .then((r) => r.json())
+      .then((d) => termAppend(d.ok ? `✅ 已通过 ${d.via} 发送命令\n${d.out}` : `⚠️ ${d.out}`, d.ok ? "l-out" : "l-err"))
+      .catch(() => termAppend("后端未响应", "l-err"));
+    return;
+  }
+  termExec(el.dataset.cmd);
+});
+document.getElementById("termQuick").innerHTML = QUICK.map((c) => `<span class="qc">${c}</span>`).join("");document.querySelectorAll(".qc").forEach((el) => el.onclick = () => termExec(el.textContent));
+document.getElementById("openBackups").onclick = () => fetch("/api/open?dir=backups");
+
+applyPrefs();
+load();
+
+/* ---------------- 文件页 ---------------- */
+let fpPath = "/sdcard";
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+async function fpLoad(p) {
+  if (p) fpPath = p;
+  $("#fpPath").textContent = fpPath;
+  $("#fpMeta").textContent = "读取中…";
+  const box = $("#fpList");
+  try {
+    const r = await fetch("/api/list?path=" + encodeURIComponent(fpPath));
+    const d = await r.json();
+    if (!d.ok) { box.innerHTML = `<div class="empty">${esc(d.error || "读取失败")}</div>`; $("#fpMeta").textContent = "—"; return; }
+    $("#fpMeta").textContent = `${d.entries.length} 项`;
+    fpParent = d.parent;
+    if (!d.entries.length) { box.innerHTML = `<div class="empty">空目录</div>`; return; }
+    box.innerHTML = d.entries.map((e) => `
+      <div class="fl" data-name="${esc(e.name)}" data-dir="${e.dir ? 1 : 0}">
+        <span class="em">${e.dir ? "📁" : "📄"}</span>
+        <span class="nm">${esc(e.name)}</span>
+        <span class="sz">${e.dir ? "" : human(e.size)}</span>
+        <span class="act">${e.dir ? "打开" : "保存"}</span>
+      </div>`).join("");
+  } catch (err) {
+    box.innerHTML = `<div class="empty">后端未响应</div>`;
+  }
+}
+let fpParent = "/sdcard";
+
+$("#fpList").addEventListener("click", async (ev) => {
+  const row = ev.target.closest(".fl");
+  if (!row || row.dataset.busy) return;
+  const name = row.dataset.name;
+  const isDir = row.dataset.dir === "1";
+  const full = fpPath.replace(/\/$/, "") + "/" + name;
+  const act = row.querySelector(".act");
+  if (isDir) { fpLoad(full); return; }
+  row.dataset.busy = "1";
+  act.textContent = "保存中…";
+  try {
+    const d = await (await fetch("/api/pull?path=" + encodeURIComponent(full))).json();
+    if (d.ok) {
+      act.textContent = "已保存";
+      $("#fpMeta").textContent = `已存到 ${d.path}（${human(d.size)}），已在资源管理器选中`;
+    } else {
+      act.textContent = "失败";
+      $("#fpMeta").textContent = `❌ ${d.error || "保存失败"}`;
+    }
+  } catch (e) {
+    act.textContent = "失败";
+    $("#fpMeta").textContent = "❌ 后端未响应";
+  } finally {
+    delete row.dataset.busy;
+    setTimeout(() => { act.textContent = "保存"; }, 2400);
+  }
+});
+
+$("#fpUp").onclick = () => fpLoad(fpParent || "/sdcard");
+$("#fpRefresh").onclick = () => fpLoad();
+
+const dz = $("#fpDrop");
+const DZ_DEFAULT = "⬇ 把电脑上的文件拖到这里，直接上传到手机当前目录";
+["dragenter", "dragover"].forEach((t) => dz.addEventListener(t, (e) => { e.preventDefault(); dz.classList.add("over"); }));
+["dragleave", "drop"].forEach((t) => dz.addEventListener(t, (e) => { e.preventDefault(); dz.classList.remove("over"); }));
+dz.addEventListener("drop", async (e) => {
+  const files = [...e.dataTransfer.files];
+  if (!files.length) return;
+  const bad = [];
+  for (let i = 0; i < files.length; i++) {
+    dz.textContent = `上传 ${i + 1}/${files.length}：${files[i].name}`;
+    try {
+      const d = await (await fetch("/api/upload?dir=" + encodeURIComponent(fpPath), {
+        method: "POST", headers: { "X-Filename": encodeURIComponent(files[i].name) }, body: files[i],
+      })).json();
+      if (!d.ok) bad.push(`${files[i].name}：${d.error || d.log || "失败"}`);
+    } catch (err) {
+      bad.push(`${files[i].name}：后端未响应`);
+    }
+  }
+  dz.textContent = bad.length ? `❌ ${bad.join("；")}` : `✅ 已上传 ${files.length} 个文件到 ${fpPath}`;
+  setTimeout(() => { dz.textContent = DZ_DEFAULT; }, bad.length ? 6000 : 2500);
+  fpLoad();
+});
+
+/* ---------------- 装应用 ---------------- */
+const apkDlg = $("#apkDlg");
+const apkMeta = $("#apkMeta");
+const apkList = $("#apkList");
+
+async function apkLoad() {
+  apkMeta.textContent = "读取 apk/ 文件夹…";
+  try {
+    const d = await (await fetch("/api/apks")).json();
+    if (!d.ok) { apkList.innerHTML = `<div class="empty">${esc(d.error || "读取失败")}</div>`; return; }
+    apkMeta.textContent = d.items.length
+      ? `${d.items.length} 个安装包 · ${d.dir}`
+      : `apk/ 里还没有安装包 · ${d.dir}`;
+    if (!d.items.length) {
+      apkList.innerHTML = '<div class="empty">把 .apk 放进 apk/ 文件夹，或者直接拖进这个对话框</div>';
+      return;
+    }
+    apkList.replaceChildren(...d.items.map((it) => {
+      const row = document.createElement("div");
+      row.className = "fl";
+      row.innerHTML = `<span class="em">📦</span><span class="nm">${esc(it.name)}</span>
+        <span class="sz">${human(it.size)}</span><span class="act">安装</span>`;
+      row.onclick = () => apkInstall(it.name, row);
+      return row;
+    }));
+  } catch (e) {
+    apkList.innerHTML = '<div class="empty">后端未响应</div>';
+  }
+}
+
+async function apkInstall(name, row) {
+  if (row && row.dataset.busy) return;
+  if (row) row.dataset.busy = "1";
+  const act = row && row.querySelector(".act");
+  if (act) act.textContent = "安装中…";
+  apkMeta.textContent = `正在安装 ${name}…（可能要十几秒）`;
+  try {
+    const d = await (await fetch("/api/install?name=" + encodeURIComponent(name), { method: "POST" })).json();
+    apkMeta.textContent = d.ok ? `✅ ${name} 安装成功` : `❌ ${d.error || d.log || "安装失败"}`;
+    if (act) act.textContent = d.ok ? "✅ 成功" : "❌ 失败";
+  } catch (e) {
+    apkMeta.textContent = "❌ 后端未响应";
+    if (act) act.textContent = "❌ 失败";
+  } finally {
+    if (row) delete row.dataset.busy;
+  }
+}
+
+$("#apkOpen").onclick = () => fetch("/api/open?dir=apk");
+$("#apkClose").onclick = () => apkDlg.close();
+apkDlg.addEventListener("click", (e) => { if (e.target === apkDlg) apkDlg.close(); });
+
+const apkDrop = $("#apkDrop");
+["dragenter", "dragover"].forEach((t) => apkDlg.addEventListener(t, (e) => {
+  e.preventDefault();
+  apkDrop.classList.add("over");
+}));
+apkDlg.addEventListener("dragleave", () => apkDrop.classList.remove("over"));
+apkDlg.addEventListener("drop", async (e) => {
+  e.preventDefault();
+  apkDrop.classList.remove("over");
+  const f = e.dataTransfer.files[0];
+  if (!f) return;
+  if (!/\.apk$/i.test(f.name)) { apkMeta.textContent = "❌ 只认 .apk 安装包"; return; }
+  apkMeta.textContent = `正在上传并安装 ${f.name}（${human(f.size)}）…`;
+  try {
+    const d = await (await fetch("/api/install", {
+      method: "POST", headers: { "X-Filename": encodeURIComponent(f.name) }, body: f,
+    })).json();
+    apkMeta.textContent = d.ok ? `✅ ${f.name} 安装成功` : `❌ ${d.error || d.log || "安装失败"}`;
+  } catch (err) {
+    apkMeta.textContent = "❌ 后端未响应";
+  }
+});
+/* ---------------- 全量包 ---------------- */
+const romListEl = $("#romList");
+const romDropBox = $("#romDrop");
+const ROM_DROP_DEFAULT = "⬇ 把 .tgz / .tar.gz / .zip 全量包拖到这里（存进 downloads/）";
+let romScanned = false;
+
+function romBadge(kind) {
+  return kind === "fastboot" ? "线刷包" : kind === "sideload" ? "卡刷包" : "不确定";
+}
+
+async function romScan(force) {
+  if (romScanned && !force) return;
+  romScanned = true;
+  romListEl.innerHTML = '<div class="empty" style="padding:12px">扫描中…</div>';
+  try {
+    const d = await (await fetch("/api/rom/scan")).json();
+    if (d.ok === false) {
+      romListEl.innerHTML = `<div class="empty" style="padding:12px">❌ ${esc(d.error || "扫描失败")}</div>`;
+      return;
+    }
+    const items = d.items || [];
+    if (!items.length) {
+      romListEl.innerHTML = '<div class="empty" style="padding:12px">downloads/ 里还没有全量包：把 .tgz / .zip 放进去（或拖到下面的框里）再刷新</div>';
+      return;
+    }
+    romListEl.replaceChildren(...items.map(romRow));
+  } catch (e) {
+    romListEl.innerHTML = '<div class="empty" style="padding:12px">后端未响应</div>';
+  }
+}
+
+function romRow(it) {
+  const row = document.createElement("div");
+  row.className = "rom-row";
+  const em = document.createElement("span");
+  em.className = "em";
+  em.textContent = "📦";
+  const nm = document.createElement("div");
+  nm.style.cssText = "min-width:0;flex:1";
+  const t1 = document.createElement("div");
+  t1.style.cssText = "font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis";
+  t1.textContent = it.name;
+  const t2 = document.createElement("div");
+  t2.className = "meta2";
+  t2.textContent = `${it.where || "downloads"}/ · ${human(it.size)} · ${romBadge(it.kind)} · ${it.mtime || ""}`;
+  nm.append(t1, t2);
+  const btns = document.createElement("div");
+  btns.className = "rom-btns";
+  [["inspect", "检查", " outline"], ["unpack", "解包", " outline"], ["flash", "整包刷入", ""]]
+    .forEach(([act, label, cls]) => {
+      const b = document.createElement("button");
+      b.className = "btn" + cls;
+      b.style.cssText = "height:30px;padding:0 12px;font-size:11.5px";
+      b.textContent = label;
+      b.onclick = () => romAction(it, act, row);
+      btns.appendChild(b);
+    });
+  row.append(em, nm, btns);
+  return row;
+}
+
+function romDetail(row, text) {
+  const d = document.createElement("div");
+  d.className = "rom-detail";
+  d.textContent = text;
+  return d;
+}
+
+function romClearDetail(row) {
+  const nx = row.nextElementSibling;
+  if (nx && nx.classList.contains("rom-detail")) nx.remove();
+}
+
+async function romAction(it, act, row) {
+  if (row.dataset.busy) return;
+  romClearDetail(row);
+  row.dataset.busy = "1";
+  try {
+    if (act === "inspect") {
+      const d = await (await fetch("/api/rom/inspect?path=" + encodeURIComponent(it.path))).json();
+      if (!d.ok) { row.after(romDetail(row, "❌ " + (d.error || "检查失败"))); return; }
+      const imgs = (d.images || []).map((x) => x.part + " " + human(x.size)).join("  ·  ");
+      row.after(romDetail(row, `${romBadge(d.kind)} · ${(d.images || []).length} 个镜像 · 共 ${human(d.total_size)}\n` +
+        `${d.note || ""}\n${imgs}`));
+    } else if (act === "unpack") {
+      if (!confirm(`解包 ${it.name} 到 backups/？\n\n只解出 .img，不动手机。`)) return;
+      setFlashMeta(`正在解包 ${it.name}…`);
+      const d = await (await fetch("/api/rom/unpack?path=" + encodeURIComponent(it.path), { method: "POST" })).json();
+      if (!d.ok) { setFlashMeta("❌ " + (d.error || "解包失败")); return; }
+      it._dir = d.dir;
+      setFlashMeta(`✅ 已解包 ${(d.images || []).length} 个镜像`);
+      row.after(romDetail(row, `已解包到 ${d.dir}\n${(d.images || []).map((x) => x.part).join("  ·  ")}`));
+    } else {
+      row.dataset.busy = "";
+      await romFlash(it, row);
+    }
+  } catch (e) {
+    setFlashMeta("❌ 后端未响应");
+  } finally {
+    delete row.dataset.busy;
+  }
+}
+
+async function romFlash(it, row) {
+  if (row.dataset.busy) return;
+  row.dataset.busy = "1";
+  romClearDetail(row);
+  try {
+    let dir = it._dir;
+    if (!dir) {
+      setFlashMeta(`正在解包 ${it.name}…`);
+      const d = await (await fetch("/api/rom/unpack?path=" + encodeURIComponent(it.path), { method: "POST" })).json();
+      if (!d.ok) { setFlashMeta("❌ " + (d.error || "解包失败")); return; }
+      dir = it._dir = d.dir;
+    }
+    const plan = await (await fetch("/api/rom/plan?dir=" + encodeURIComponent(dir))).json();
+    if (!plan.ok) { setFlashMeta("❌ " + (plan.error || "生成刷入计划失败")); return; }
+    const steps = plan.steps || [];
+    if (!steps.length) { setFlashMeta("❌ 这个包里没有可刷的镜像"); return; }
+    const skipped = (plan.skipped || []).map((s) => `${s.part}（${s.reason}）`).join("、");
+    const list = steps.map((s) => "· " + s.part + " ← " + String(s.path).split(/[\\/]/).pop()).join("\n");
+    if (!confirm(`整包刷入 ${it.name}？\n\n按这个顺序刷 ${steps.length} 个分区：\n${list}\n` +
+      (skipped ? `\n默认跳过：${skipped}\n` : "") +
+      `\n刷错分区可能开不了机；确认手机已经在 Fastboot 模式。`)) return;
+
+    const box = romDetail(row, "");
+    box.innerHTML = '<div class="rom-log"></div>';
+    row.after(box);
+    const log = box.querySelector(".rom-log");
+    let okCount = 0;
+    let failed = "";
+    for (let i = 0; i < steps.length; i++) {
+      const s = steps[i];
+      const line = document.createElement("div");
+      line.textContent = `[${i + 1}/${steps.length}] ${s.part} 刷入中…`;
+      log.appendChild(line);
+      setFlashMeta(`正在刷 ${s.part}（${i + 1}/${steps.length}）…`);
+      let d;
+      try {
+        d = await (await fetch(`/api/flash-local?part=${encodeURIComponent(s.part)}&path=${encodeURIComponent(s.path)}`,
+          { method: "POST" })).json();
+      } catch (e) {
+        d = { ok: false, error: "后端未响应" };
+      }
+      const tail = String(d.log || d.error || d.mode || "").trim().split("\n").pop().slice(0, 120);
+      line.className = d.ok ? "okline" : "badline";
+      line.textContent = `[${i + 1}/${steps.length}] ${s.part} ${d.ok ? "✅" : "❌"} ${tail}`;
+      if (d.ok) okCount += 1;
+      else { failed = s.part; break; }
+    }
+    setFlashMeta(okCount === steps.length
+      ? `✅ 整包刷入完成：${okCount} 个分区`
+      : `⚠ 停在 ${failed}：成功 ${okCount}/${steps.length} 个分区`);
+  } catch (e) {
+    setFlashMeta("❌ 后端未响应");
+  } finally {
+    delete row.dataset.busy;
+  }
+}
+
+$("#romRefresh").onclick = () => romScan(true);
+$("#romOpen").onclick = () => fetch("/api/open?dir=downloads");
+["dragenter", "dragover"].forEach((t) => romDropBox.addEventListener(t, (e) => {
+  e.preventDefault();
+  romDropBox.classList.add("over");
+}));
+["dragleave", "drop"].forEach((t) => romDropBox.addEventListener(t, (e) => {
+  e.preventDefault();
+  romDropBox.classList.remove("over");
+}));
+romDropBox.addEventListener("drop", async (e) => {
+  const f = e.dataTransfer.files[0];
+  if (!f) return;
+  if (!/\.(tgz|tar\.gz|tar|zip|img\.gz)$/i.test(f.name)) {
+    romDropBox.textContent = "❌ 只认 .tgz / .tar.gz / .tar / .zip 全量包";
+    setTimeout(() => { romDropBox.textContent = ROM_DROP_DEFAULT; }, 3000);
+    return;
+  }
+  romDropBox.textContent = `上传 ${f.name}（${human(f.size)}）…`;
+  try {
+    const d = await (await fetch("/api/rom/save", {
+      method: "POST", headers: { "X-Filename": encodeURIComponent(f.name) }, body: f,
+    })).json();
+    romDropBox.textContent = d.ok ? `✅ 已存到 ${d.path}` : "❌ " + (d.error || "保存失败");
+  } catch (err) {
+    romDropBox.textContent = "❌ 后端未响应";
+  }
+  setTimeout(() => { romDropBox.textContent = ROM_DROP_DEFAULT; }, 4000);
+  romScan(true);
+});
+
+/* ---------------- AI 助手 ---------------- */
+const aiChatEl = $("#aiChat");
+const aiKeyCard = $("#aiKeyCard");
+const AI_RISKY_LS = "mi6aiRisky";
+const AI_DEEP_LS = "mi6aiDeep";
+let aiHasKey = false;
+
+$("#aiRisky").checked = localStorage.getItem(AI_RISKY_LS) === "1";
+$("#aiRisky").onchange = (e) => localStorage.setItem(AI_RISKY_LS, e.target.checked ? "1" : "0");
+$("#aiDeep").checked = localStorage.getItem(AI_DEEP_LS) === "1";
+$("#aiDeep").onchange = (e) => localStorage.setItem(AI_DEEP_LS, e.target.checked ? "1" : "0");
+
+function aiScroll() { aiChatEl.scrollTop = aiChatEl.scrollHeight; }
+
+function aiTyping(on, label) {
+  let t = document.getElementById("aiTyping");
+  if (on) {
+    if (!t) {
+      t = document.createElement("div");
+      t.id = "aiTyping";
+      t.className = "ai-typing";
+      aiChatEl.appendChild(t);
+    }
+    t.textContent = label || "思考中…";
+    aiScroll();
+  } else if (t) {
+    t.remove();
+  }
+}
+
+function aiPendingCard(pending) {
+  const card = document.createElement("div");
+  card.className = "ai-pending";
+  const head = document.createElement("div");
+  head.textContent = `⚠ 需要你确认这 ${pending.length} 个操作：`;
+  card.appendChild(head);
+  pending.forEach((p) => {
+    const ln = document.createElement("div");
+    ln.className = "ln";
+    ln.textContent = `${p.name}  ${JSON.stringify(p.args || {})}`;
+    card.appendChild(ln);
+  });
+  const bar = document.createElement("div");
+  bar.className = "ai-tools";
+  const ok = document.createElement("button");
+  ok.className = "btn";
+  ok.style.cssText = "height:32px;padding:0 16px";
+  ok.textContent = "执行";
+  ok.onclick = () => { card.remove(); aiApprove(); };
+  const no = document.createElement("button");
+  no.className = "btn outline";
+  no.style.cssText = "height:32px;padding:0 16px";
+  no.textContent = "取消";
+  no.onclick = () => { card.remove(); aiCancel(); };
+  bar.append(ok, no);
+  card.appendChild(bar);
+  return card;
+}
+
+function aiBubble(role, text, steps, pending, error, reasoning) {
+  const box = document.createElement("div");
+  box.className = "ai-msg " + (role === "user" ? "user" : "bot") + (error ? " err" : "");
+  if (reasoning) {                     // 历史消息里的思考过程，默认折叠
+    const think = document.createElement("details");
+    think.className = "ai-think";
+    const sum = document.createElement("summary");
+    sum.textContent = "思考过程";
+    const body = document.createElement("div");
+    body.className = "ai-think-body";
+    body.textContent = reasoning;
+    think.append(sum, body);
+    box.appendChild(think);
+  }
+  if (text) {
+    const p = document.createElement("div");
+    p.textContent = text;
+    box.appendChild(p);
+  }
+  if (error) {
+    const p = document.createElement("div");
+    p.textContent = error;
+    box.appendChild(p);
+  }
+  if (steps && steps.length) {
+    const wrap = document.createElement("div");
+    wrap.className = "ai-steps";
+    steps.forEach((s) => {
+      const row = document.createElement("div");
+      row.className = "ai-step" + (s.ok ? "" : " bad");
+      const nm = document.createElement("span");
+      nm.className = "nm";
+      nm.textContent = s.name || "?";
+      const tx = document.createElement("span");
+      tx.className = "tx";
+      tx.textContent = s.text || "完成";
+      row.title = JSON.stringify(s.args || {});
+      row.append(nm, tx);
+      wrap.appendChild(row);
+    });
+    box.appendChild(wrap);
+  }
+  if (pending && pending.length) box.appendChild(aiPendingCard(pending));
+  aiChatEl.appendChild(box);
+  aiScroll();
+  return box;
+}
+
+function aiHello() {
+  aiBubble("bot",
+    "我是这台小米6 的刷机助手，能直接调用工具箱干活：查状态、看分区、解包全量包、进 Fastboot 刷、备份分区、装应用。\n\n" +
+    "直接说要干什么就行，比如：\n" +
+    "· 先看看手机现在什么状态\n" +
+    "· 把 downloads 里的官方包刷进去\n" +
+    "· 备份 boot 分区到电脑\n\n" +
+    "勾上「深度思考」我会先把思路捋一遍再动手，思考过程会实时显示出来；" +
+    "勾上「直接执行」我才会不问就把危险操作做掉。\n\n" +
+    "重启到 recovery / Fastboot 时手机断线是正常的，我会用 wait_for_device 等它回来，不会让你白拔线。");
+}
+
+function aiRenderLog(log) {
+  aiChatEl.replaceChildren();
+  if (!log || !log.length) { aiHello(); return; }
+  log.forEach((e) => {
+    if (e.role === "user") aiBubble("user", e.text || "");
+    else aiBubble("bot", e.text || "", e.steps || [], e.pending || [], e.error || "", e.reasoning || "");
+  });
+}
+
+function aiRenderReply(d) {
+  if (d && d.log) { aiRenderLog(d.log); return; }   // 服务端有完整记录就照它重画，最不会错
+  const e = d && d.entry;
+  if (!e) { aiBubble("bot", "", [], [], (d && d.error) || "出错了"); return; }
+  aiBubble("bot", e.text || "", e.steps || [], e.pending || [], e.error || "");
+}
+
+async function aiLoadState(renderLog) {
+  try {
+    const d = await (await fetch("/api/ai/state")).json();
+    aiHasKey = !!d.hasKey;
+    const chip = $("#aiKeyChip");
+    chip.textContent = d.hasKey ? "🔑 " + d.mask : "🔑 设置 API Key";
+    chip.className = "chip key-chip" + (d.hasKey ? " ok" : "");
+    $("#aiMeta").textContent = d.hasKey
+      ? `${d.model} · ${d.base} · ${d.mask}`
+      : "说人话刷机 · DeepSeek · 点右上角 🔑 填 Key";
+    if (renderLog) aiRenderLog(d.log || []);
+  } catch (e) {
+    $("#aiKeyChip").textContent = "后端未响应";
+    $("#aiKeyChip").className = "chip";
+  }
+}
+
+/* ---- 流式：思考过程 + 工具调用边跑边显示 ---- */
+function aiStreamBubble(model) {
+  const box = document.createElement("div");
+  box.className = "ai-msg bot";
+  const status = document.createElement("div");
+  status.className = "ai-status";
+  status.textContent = model ? `${model} 正在想…` : "正在想…";
+  const think = document.createElement("details");
+  think.className = "ai-think";
+  think.hidden = true;
+  const sum = document.createElement("summary");
+  sum.textContent = "思考过程";
+  const thinkBody = document.createElement("div");
+  thinkBody.className = "ai-think-body";
+  think.append(sum, thinkBody);
+  const content = document.createElement("div");
+  content.className = "ai-content";
+  const steps = document.createElement("div");
+  steps.className = "ai-steps";
+  box.append(status, think, content, steps);
+  aiChatEl.appendChild(box);
+  aiScroll();
+  return { box, status, think, thinkBody, content, steps, lastStep: null };
+}
+
+function aiHandleEvent(L, ev) {
+  switch (ev.type) {
+    case "start":
+      L.status.textContent = ev.deep
+        ? `${ev.model} 深度思考中（先想再做）…`
+        : `${ev.model} 正在想…`;
+      break;
+    case "round":
+      if (ev.n > 1) L.status.textContent = `第 ${ev.n} 轮：看工具结果继续想…`;
+      break;
+    case "reasoning":
+      if (ev.delta) {
+        L.think.hidden = false;
+        L.think.open = true;
+        L.thinkBody.textContent += ev.delta;
+        L.status.textContent = "正在深度思考…";
+        aiScroll();
+      }
+      break;
+    case "content":
+      if (ev.delta) {
+        L.content.textContent += ev.delta;
+        aiScroll();
+      }
+      break;
+    case "tool_call": {
+      const row = document.createElement("div");
+      row.className = "ai-step";
+      const nm = document.createElement("span");
+      nm.className = "nm";
+      nm.textContent = ev.name;
+      const tx = document.createElement("span");
+      tx.className = "tx";
+      tx.textContent = "执行中…";
+      row.title = JSON.stringify(ev.args || {});
+      row.append(nm, tx);
+      L.steps.appendChild(row);
+      L.lastStep = row;
+      L.status.textContent = `调用 ${ev.name}…`;
+      aiScroll();
+      break;
+    }
+    case "tool_result":
+      if (L.lastStep) {
+        L.lastStep.className = "ai-step" + (ev.ok ? "" : " bad");
+        const tx = L.lastStep.querySelector(".tx");
+        if (tx) tx.textContent = ev.text || (ev.ok ? "完成" : "失败");
+      }
+      L.status.textContent = "继续…";
+      break;
+    case "pending":
+      L.box.appendChild(aiPendingCard(ev.items || []));
+      L.status.textContent = "等你确认这些操作";
+      aiScroll();
+      break;
+    case "final":
+      L.box.remove();
+      if (ev.log) aiRenderLog(ev.log);
+      else aiRenderReply({ entry: { text: ev.text, steps: ev.steps, pending: ev.pending, error: ev.error } });
+      break;
+    case "error":
+      L.box.remove();
+      aiBubble("bot", "", [], [], ev.error || "出错了");
+      break;
+  }
+}
+
+/* 返回 true = 这次走流式成功了（含用户主动停止） */
+let aiBusy = false;
+let aiAbort = null;
+
+async function aiStream(text, allowRisky, deep) {
+  const L = aiStreamBubble(null);
+  const sendBtn = $("#aiSend");
+  const sendText = sendBtn.textContent;
+  aiBusy = true;
+  aiAbort = new AbortController();
+  sendBtn.textContent = "■";          // 生成中变成「停止」
+  sendBtn.classList.add("stopping");
+  sendBtn.disabled = false;           // 仍然可以点，用来停下
+  let finished = false;
+  try {
+    const resp = await fetch("/api/ai/stream", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, allowRisky, deep }),
+      signal: aiAbort.signal,
+    });
+    if (!resp.ok || !resp.body) throw new Error("HTTP " + resp.status);
+    const reader = resp.body.getReader();
+    const dec = new TextDecoder("utf-8");
+    let buf = "";
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let idx;
+      while ((idx = buf.indexOf("\n\n")) >= 0) {
+        const chunk = buf.slice(0, idx);
+        buf = buf.slice(idx + 2);
+        for (const line of chunk.split("\n")) {
+          if (!line.startsWith("data:")) continue;
+          const raw = line.slice(5).trim();
+          if (!raw) continue;
+          let ev;
+          try { ev = JSON.parse(raw); } catch (e) { continue; }
+          if (ev.type === "final" || ev.type === "error") finished = true;
+          aiHandleEvent(L, ev);
+        }
+      }
+    }
+  } catch (err) {
+    L.box.remove();
+    if (err && err.name === "AbortError") {
+      aiBubble("bot", "", [], [], "已停止。你可以直接说下一句。");
+      finished = true;               // 主动停止不算失败，别再走回退接口
+    } else {
+      finished = false;
+    }
+  } finally {
+    aiBusy = false;
+    aiAbort = null;
+    sendBtn.classList.remove("stopping");
+    sendBtn.disabled = false;
+    sendBtn.textContent = sendText;
+    const inp = $("#aiIn");
+    if (inp) inp.focus();            // 停下来直接接着打字
+  }
+  return finished;
+}
+
+async function aiSendText(text) {
+  text = (text || "").trim();
+  if (!text) return;
+  if (!aiHasKey) {
+    aiKeyCard.hidden = false;
+    $("#aiKeyTip").textContent = "先填一个 DeepSeek API Key";
+    $("#aiKeyIn").focus();
+    return;
+  }
+  const allowRisky = $("#aiRisky").checked;
+  const deep = $("#aiDeep").checked;
+  aiBubble("user", text);
+
+  if (await aiStream(text, allowRisky, deep)) return;
+
+  // 流式没跑通（老后端 / 连接断了）就退回普通接口
+  aiTyping(true, "换了条路重试…");
+  let d;
+  try {
+    d = await (await fetch("/api/ai/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, allowRisky }),
+    })).json();
+  } catch (e) {
+    d = { ok: false, error: "后端未响应（服务可能已退出，重新双击 启动.bat）" };
+  }
+  aiTyping(false);
+  aiRenderReply(d);
+}
+
+async function aiApprove() {
+  aiTyping(true, "正在执行…");
+  let d;
+  try {
+    d = await (await fetch("/api/ai/approve", { method: "POST" })).json();
+  } catch (e) {
+    d = { ok: false, error: "后端未响应" };
+  }
+  aiTyping(false);
+  aiRenderReply(d);
+}
+
+async function aiCancel() {
+  let d;
+  try {
+    d = await (await fetch("/api/ai/cancel", { method: "POST" })).json();
+  } catch (e) {
+    d = { ok: false, error: "后端未响应" };
+  }
+  if (d.ok && d.log) aiRenderLog(d.log);
+  else aiBubble("bot", "", [], [], d.error || "取消失败");
+}
+
+$("#aiSend").onclick = async () => {
+  if (aiBusy) {                       // 生成中：这个按钮就是「停止」
+    try { await fetch("/api/ai/stop", { method: "POST" }); } catch (e) { /* 服务已经停了 */ }
+    if (aiAbort) aiAbort.abort();
+    return;
+  }
+  const i = $("#aiIn");
+  const t = i.value;
+  i.value = "";
+  aiSendText(t);
+};
+$("#aiIn").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.isComposing) {
+    e.preventDefault();
+    if (!aiBusy) $("#aiSend").click();   // 生成中按回车不误触停止
+  }
+});
+$("#aiNew").onclick = async () => {
+  await fetch("/api/ai/reset", { method: "POST" });
+  aiChatEl.replaceChildren();
+  aiHello();
+};
+$("#aiKeyChip").onclick = () => {
+  aiKeyCard.hidden = !aiKeyCard.hidden;
+  if (!aiKeyCard.hidden) $("#aiKeyIn").focus();
+};
+$("#aiKeySave").onclick = async () => {
+  const key = $("#aiKeyIn").value.trim();
+  const tip = $("#aiKeyTip");
+  if (!key) { tip.textContent = "先粘贴 Key"; return; }
+  tip.textContent = "保存中…";
+  const d = await (await fetch("/api/ai/key", { method: "POST", body: key })).json();
+  tip.textContent = d.ok ? "✅ 已加密保存" : "❌ " + (d.error || "保存失败");
+  if (d.ok) {
+    $("#aiKeyIn").value = "";
+    aiKeyCard.hidden = true;
+    aiLoadState(false);
+  }
+};
+$("#aiKeyTest").onclick = async () => {
+  const tip = $("#aiKeyTip");
+  tip.textContent = "测试中…";
+  const d = await (await fetch("/api/ai/test")).json();
+  tip.textContent = d.ok ? `✅ 连通：${d.reply || "OK"}` : "❌ " + (d.error || "失败");
+};
+$("#aiKeyClear").onclick = async () => {
+  if (!confirm("删除已保存的 Key？")) return;
+  const d = await (await fetch("/api/ai/key?clear=1", { method: "POST" })).json();
+  $("#aiKeyTip").textContent = d.ok ? "已删除" : "❌ " + (d.error || "删除失败");
+  aiLoadState(false);
+};
+
+const AI_QUICK = ["先看看手机现在什么状态", "列出 downloads 里的包", "把 downloads 里的包刷进去",
+  "备份 boot 分区到电脑", "进 Fastboot 刷 recovery", "装 apk/ 里的 Magisk"];
+$("#aiQuick").innerHTML = AI_QUICK.map((q) => `<span class="qc">${q}</span>`).join("");
+document.querySelectorAll("#aiQuick .qc").forEach((el) => {
+  el.onclick = () => aiSendText(el.textContent);
+});
+
+aiHello();
+aiLoadState(false);
+
+/* ---------------- IMG 解包 / 编辑 / 重打包 ---------------- */
+const imgListEl = $("#imgList");
+const imgDrop = $("#imgDrop");
+const IMG_DROP_DEFAULT = "⬇ 把 .img 拖到这里（存到 downloads/img_work/）";
+let imgCur = null;
+let imgWork = "";
+let imgEditing = "";
+let imgRepacked = "";
+let imgScanned = false;
+
+const hsize = (o) => human((o && o.size) || 0);
+const imgMeta = (t) => { $("#imgMeta").textContent = t; };
+const IMG_KINDS = {
+  boot: ["🥾", "boot 镜像", "可以解包 ramdisk"],
+  recovery: ["🛡️", "recovery 镜像", "可以解包 ramdisk"],
+  ext4: ["💽", "ext4", "文件系统分区镜像，不是 boot 镜像"],
+  fat: ["💽", "FAT", "文件系统分区镜像，不是 boot 镜像"],
+  sparse: ["🧩", "sparse", "稀疏镜像，要先 simg2img 转 raw"],
+  zero: ["⬜", "空分区", "整片都是 0，这个分区是空的"],
+  empty: ["⬜", "空文件", "0 字节"],
+  gzip: ["🗜️", "gzip 压缩", "压缩镜像，不是 boot 镜像"],
+  xz: ["🗜️", "xz 压缩", "压缩镜像，不是 boot 镜像"],
+  lz4: ["🗜️", "lz4 压缩", "压缩镜像，不是 boot 镜像"],
+  unknown: ["❔", "非 boot", "不是 Android boot 镜像"],
+};
+const imgKind = (k) => IMG_KINDS[k] || IMG_KINDS.unknown;
+
+async function imgScan() {
+  if (imgScanned) return;
+  imgScanned = true;
+  imgListEl.innerHTML = '<div class="empty" style="padding:12px">扫描中…</div>';
+  try {
+    const d = await (await fetch("/api/img/scan")).json();
+    if (d.ok === false) {
+      imgListEl.innerHTML = `<div class="empty" style="padding:12px">❌ ${esc(d.error || "扫描失败")}</div>`;
+      return;
+    }
+    const items = d.items || [];
+    if (!items.length) {
+      imgListEl.innerHTML = '<div class="empty" style="padding:12px">没找到 .img：backups/ downloads/ images/ 里都没有，拖一个进来也行</div>';
+      return;
+    }
+    imgListEl.replaceChildren(...items.map(imgRow));
+  } catch (e) {
+    imgListEl.innerHTML = '<div class="empty" style="padding:12px">后端未响应</div>';
+  }
+}
+
+function imgRow(it) {
+  const row = document.createElement("div");
+  row.className = "img-row" + (imgCur && imgCur.path === it.path ? " on" : "")
+    + (it.kind === "boot" ? "" : " dim");
+  const ico = document.createElement("span");
+  ico.className = "em";
+  ico.textContent = imgKind(it.kind)[0];
+  const nm = document.createElement("div");
+  nm.className = "nm";
+  nm.textContent = it.name;
+  const meta = document.createElement("div");
+  meta.className = "meta2";
+  meta.style.flex = "none";
+  meta.textContent = `${it.where}/ · ${human(it.size)} · ${imgKind(it.kind)[1]} · ${it.mtime}`;
+  meta.title = it.note || "";
+  row.append(ico, nm, meta);
+  row.onclick = () => imgPick(it, row);
+  return row;
+}
+
+async function imgPick(it, row) {
+  imgCur = it;
+  imgWork = "";
+  imgEditing = "";
+  imgRepacked = "";
+  document.querySelectorAll(".img-row").forEach((r) => r.classList.remove("on"));
+  if (row) row.classList.add("on");
+  $("#imgWork").hidden = true;
+  $("#imgRepack").disabled = true;
+  $("#imgFlash").disabled = true;
+  $("#imgChip").textContent = "读取中…";
+  $("#imgChip").className = "chip";
+  imgMeta(`正在读 ${it.name} 的 header…`);
+  try {
+    const d = await (await fetch("/api/img/inspect?path=" + encodeURIComponent(it.path))).json();
+    if (!d.ok) {
+      // 不是 boot 镜像也把话说清楚，而不是丢一句"打不开"
+      const k = imgKind(d.kind || it.kind);
+      $("#imgChip").textContent = k[1];
+      $("#imgInfoCard").hidden = false;
+      $("#imgTitle").textContent = it.name;
+      $("#imgSub").textContent = `${it.where}/ · ${human(it.size)}`;
+      $("#imgKv").replaceChildren(...[
+        ["类型", k[1]],
+        ["说明", d.note || it.note || k[2] || "—"],
+        ["大小", human(it.size)],
+        ["位置", it.path],
+      ].map(([key, val]) => {
+        const box = document.createElement("div");
+        const b = document.createElement("b");
+        b.textContent = key;
+        const s = document.createElement("span");
+        s.textContent = val;
+        s.title = val;
+        box.append(b, s);
+        return box;
+      }));
+      $("#imgUnpack").disabled = true;
+      imgMeta("❌ " + (d.error || "识别失败"));
+      return;
+    }
+    $("#imgUnpack").disabled = false;
+    imgShowInfo(d, it);
+  } catch (e) {
+    imgMeta("❌ 后端未响应");
+  }
+}
+
+function imgShowInfo(d, it) {
+  $("#imgInfoCard").hidden = false;
+  $("#imgTitle").textContent = it.name;
+  $("#imgSub").textContent = `${it.where}/ · ${human(it.size)} · v${d.headerVersion} · page ${d.pageSize}`;
+  $("#imgChip").textContent = "v" + d.headerVersion + " · 已识别";
+  $("#imgChip").className = "chip ok";
+  const rows = [
+    ["格式", d.magic || "—"],
+    ["header", `v${d.headerVersion}（${d.headerSize} 字节）`],
+    ["page", d.pageSize + " 字节"],
+    ["kernel", hsize(d.kernel)],
+    ["ramdisk", `${hsize(d.ramdisk)} · ${(d.ramdisk && d.ramdisk.compression) || "?"}`],
+    ["second", hsize(d.second)],
+    ["dtb", hsize(d.dtb)],
+    ["cmdline", d.cmdline || "（空）"],
+    ["board", d.board || "—"],
+    ["OS", d.osVersion || "—"],
+    ["sha1", d.sha1 || "—"],
+  ];
+  $("#imgKv").replaceChildren(...rows.map(([k, v]) => {
+    const box = document.createElement("div");
+    const b = document.createElement("b");
+    b.textContent = k;
+    const s = document.createElement("span");
+    s.textContent = v;
+    s.title = v;
+    box.append(b, s);
+    return box;
+  }));
+  imgMeta(d.note || "点「解包」展开 ramdisk，改完再「重打包」");
+}
+
+$("#imgUnpack").onclick = async () => {
+  if (!imgCur) return;
+  imgMeta(`正在解包 ${imgCur.name}…`);
+  $("#imgChip").textContent = "解包中…";
+  try {
+    const d = await (await fetch("/api/img/unpack?path=" + encodeURIComponent(imgCur.path), { method: "POST" })).json();
+    if (!d.ok) {
+      $("#imgChip").textContent = "解包失败";
+      imgMeta("❌ " + (d.error || "解包失败"));
+      return;
+    }
+    imgWork = d.dir;
+    $("#imgWork").hidden = false;
+    $("#imgRepack").disabled = false;
+    $("#imgFlash").disabled = false;
+    $("#imgChip").textContent = "已解包";
+    $("#imgChip").className = "chip ok";
+    imgMeta(`工作目录：${d.dir} —— 改完文件先「保存」，再「重打包」`);
+    imgShowTree(d.entries || []);
+  } catch (e) {
+    imgMeta("❌ 后端未响应");
+  }
+};
+
+function imgShowTree(entries) {
+  const box = $("#imgTree");
+  $("#imgTreeCount").textContent = `${entries.length} 项`;
+  if (!entries.length) {
+    box.innerHTML = '<div class="empty">ramdisk 是空的</div>';
+    return;
+  }
+  box.replaceChildren(...entries.map((e) => {
+    const row = document.createElement("div");
+    row.className = "img-file";
+    const isLink = String(e.mode || "").startsWith("12");
+    const nm = document.createElement("span");
+    nm.style.cssText = "min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap";
+    nm.textContent = (e.dir ? "📁 " : isLink ? "🔗 " : "📄 ") + e.name;
+    const sz = document.createElement("span");
+    sz.className = "sz";
+    sz.textContent = e.dir ? "" : human(e.size);
+    row.append(nm, sz);
+    if (isLink) row.title = "符号链接，不支持在这里改";
+    if (!e.dir) row.onclick = () => imgOpenFile(e, row);
+    return row;
+  }));
+}
+
+async function imgOpenFile(e, row) {
+  document.querySelectorAll("#imgTree .img-file").forEach((r) => r.classList.remove("on"));
+  row.classList.add("on");
+  imgEditing = e.name;
+  $("#imgFileName").textContent = e.name;
+  $("#imgEditTip").textContent = "读取中…";
+  try {
+    const d = await (await fetch(`/api/img/file?dir=${encodeURIComponent(imgWork)}&name=${encodeURIComponent(e.name)}`)).json();
+    const ta = $("#imgEditor");
+    ta.disabled = !d.ok;
+    ta.value = d.ok ? (d.text || "") : "";
+    $("#imgSaveFile").disabled = !d.ok || !!d.binary;
+    $("#imgEditTip").textContent = d.ok
+      ? (d.binary ? `二进制文件（${human(d.size)}），不支持在这里改` : `${human(d.size)} · 改完点保存`)
+      : "❌ " + (d.error || "读不出来");
+  } catch (err) {
+    $("#imgEditTip").textContent = "❌ 后端未响应";
+  }
+}
+
+$("#imgSaveFile").onclick = async () => {
+  if (!imgWork || !imgEditing) return;
+  $("#imgEditTip").textContent = "保存中…";
+  try {
+    const d = await (await fetch(`/api/img/file?dir=${encodeURIComponent(imgWork)}&name=${encodeURIComponent(imgEditing)}`,
+      { method: "POST", body: $("#imgEditor").value })).json();
+    $("#imgEditTip").textContent = d.ok ? `✅ 已保存（${human(d.size)}）` : "❌ " + (d.error || "保存失败");
+  } catch (e) {
+    $("#imgEditTip").textContent = "❌ 后端未响应";
+  }
+};
+
+$("#imgRepack").onclick = async () => {
+  if (!imgWork) return;
+  const suggest = (imgCur ? imgCur.name.replace(/\.img$/i, "") : "boot") + "_repack.img";
+  const name = prompt("重打包成什么文件？（存到 downloads/）", suggest);
+  if (!name) return;
+  imgMeta("正在重打包（重算 cpio / gzip / header）…");
+  $("#imgChip").textContent = "打包中…";
+  try {
+    const d = await (await fetch(`/api/img/repack?dir=${encodeURIComponent(imgWork)}&name=${encodeURIComponent(name)}`,
+      { method: "POST" })).json();
+    if (!d.ok) {
+      $("#imgChip").textContent = "打包失败";
+      imgMeta("❌ " + (d.error || "重打包失败"));
+      return;
+    }
+    imgRepacked = d.path;
+    $("#imgChip").textContent = "已打包";
+    $("#imgChip").className = "chip ok";
+    imgMeta(`✅ 已生成 ${d.path}（${human(d.size)} · v${d.headerVersion}），可以直接点「刷入分区」`);
+  } catch (e) {
+    imgMeta("❌ 后端未响应");
+  }
+};
+
+$("#imgFlash").onclick = async () => {
+  const target = imgRepacked || (imgCur && imgCur.path);
+  if (!target) return;
+  const part = prompt("刷到哪个分区？（boot / recovery）", "boot");
+  if (!part) return;
+  const short = String(target).split(/[\\/]/).pop();
+  if (!confirm(`把 ${short} 刷进 ${part} 分区？\n\n需要手机在 Fastboot 或 TWRP；刷错可能开不了机。`)) return;
+  imgMeta(`正在刷 ${part}…`);
+  try {
+    const d = await (await fetch(`/api/flash-local?part=${encodeURIComponent(part)}&path=${encodeURIComponent(target)}`,
+      { method: "POST" })).json();
+    imgMeta(d.ok ? `✅ ${part} 刷入成功（${d.mode}）` : `❌ ${d.error || d.log || "刷入失败"}`);
+  } catch (e) {
+    imgMeta("❌ 后端未响应");
+  }
+};
+
+$("#imgRescan").onclick = () => { imgScanned = false; imgScan(); };
+["dragenter", "dragover"].forEach((t) => imgDrop.addEventListener(t, (e) => {
+  e.preventDefault();
+  imgDrop.classList.add("over");
+}));
+["dragleave", "drop"].forEach((t) => imgDrop.addEventListener(t, (e) => {
+  e.preventDefault();
+  imgDrop.classList.remove("over");
+}));
+imgDrop.addEventListener("drop", async (e) => {
+  const f = e.dataTransfer.files[0];
+  if (!f) return;
+  if (!/\.img$/i.test(f.name)) {
+    imgDrop.textContent = "❌ 只认 .img";
+    setTimeout(() => { imgDrop.textContent = IMG_DROP_DEFAULT; }, 2500);
+    return;
+  }
+  imgDrop.textContent = `上传 ${f.name}（${human(f.size)}）…`;
+  try {
+    const d = await (await fetch("/api/img/save", {
+      method: "POST", headers: { "X-Filename": encodeURIComponent(f.name) }, body: f,
+    })).json();
+    imgDrop.textContent = d.ok ? `✅ 已存到 ${d.path}` : "❌ " + (d.error || "保存失败");
+  } catch (err) {
+    imgDrop.textContent = "❌ 后端未响应";
+  }
+  setTimeout(() => { imgDrop.textContent = IMG_DROP_DEFAULT; }, 4000);
+  imgScanned = false;
+  imgScan();
+});
+
+// 刷新后停在上次的标签页（也能用 #img 这种链接直达）
+(() => {
+  const key = (location.hash || "").replace("#", "");
+  if (key && document.getElementById("page-" + key)) goTab(key);
+})();
+</script>
+</body>
+</html>
