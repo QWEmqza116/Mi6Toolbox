@@ -25,7 +25,7 @@ STATIC = BASE / "static"
 INDEX = STATIC / "index.html"
 LOG_DIR = ROOT / "logs"
 APP_ID = "mi6toolbox-webui"
-VERSION = "1.2"
+VERSION = "1.3"
 
 
 def log(msg: str) -> None:

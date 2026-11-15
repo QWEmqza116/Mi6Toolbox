@@ -17,7 +17,7 @@
   --outline:#79747E; --outline-var:#CAC4D0;
   --error:#B3261E; --success:#0F6B3F; --success-c:#C6F0DA; --warn-c:#FFE7B3; --warn:#7A5200;
   --r-xl:32px; --r-lg:24px; --r-md:20px; --r-full:999px;
-  --logo:url(/logo-light.png);
+  --logo:url(/logo.png);
   --ease:cubic-bezier(.2,0,0,1); --spring:cubic-bezier(.05,.7,.1,1);
   --shadow-1:0 1px 2px rgba(29,27,32,.06),0 2px 6px rgba(29,27,32,.04);
   --shadow-2:0 2px 6px rgba(29,27,32,.07),0 6px 18px rgba(29,27,32,.05),0 12px 32px rgba(29,27,32,.04);
@@ -202,12 +202,16 @@ html[data-theme="dark"] .tile.accent{
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
   transition:opacity .45s var(--ease),visibility .45s}
 #splash.hide{opacity:0;visibility:hidden}
-.sp-mark{width:88px;height:88px;
+.sp-mark{width:92px;height:92px;border-radius:24px;
   background:var(--logo) center/contain no-repeat;
-  filter:drop-shadow(0 6px 18px rgba(0,0,0,.16));
+  box-shadow:0 12px 34px rgba(0,0,0,.22);
   animation:pop .55s var(--spring) both}
 .sp-title{font-size:15px;font-weight:600;color:var(--on-surface-var);letter-spacing:.5px;
   animation:rise .5s .1s var(--spring) both}
+.sp-brand{display:flex;align-items:center;gap:10px;font-size:15px;letter-spacing:.4px;
+  color:var(--on-surface-var);animation:rise .6s .22s var(--spring) both}
+.sp-brand b{font-weight:700;color:var(--on-surface)}
+.sp-brand i{font-style:normal;color:var(--primary);font-weight:700;font-size:14px}
 .sp-bar{width:120px;height:3px;border-radius:999px;background:var(--surface-c-high);overflow:hidden}
 .sp-bar i{display:block;height:100%;width:40%;border-radius:999px;background:var(--primary);
   animation:slide 1s var(--ease) infinite}
@@ -368,7 +372,7 @@ html[data-theme="dark"] .ai-step.bad{background:#4A1B17;color:#F9DEDC}
 #bye{position:fixed;inset:0;z-index:10000;background:var(--surface-c-low);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center}
 #bye[hidden]{display:none}
-#bye .bye-mark{width:72px;height:72px;
+#bye .bye-mark{width:72px;height:72px;border-radius:20px;
   background:var(--logo) center/contain no-repeat}
 #bye .bye-t{font-size:19px;font-weight:650}
 #bye .bye-h{font-size:13px;color:var(--on-surface-var);line-height:1.9}
@@ -459,9 +463,9 @@ main{padding:8px clamp(10px,1.6vw,28px) 96px}
 }
 /* ---------- 关于 ---------- */
 .about-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
-.about-logo{width:54px;height:54px;flex:none;
+.about-logo{width:54px;height:54px;flex:none;border-radius:14px;
   background:var(--logo) center/contain no-repeat;
-  filter:drop-shadow(0 1px 3px rgba(0,0,0,.14))}
+  box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .about-head .t{font-size:15.5px;font-weight:650}
 .about-head .h{font-size:12px;color:var(--on-surface-var);margin-top:3px}
 .about-lines{font-size:12.5px;line-height:1.95;color:var(--on-surface-var)}
@@ -477,9 +481,21 @@ main{padding:8px clamp(10px,1.6vw,28px) 96px}
 .zsm-box img{width:196px;height:196px;border-radius:14px;background:#fff;
   box-shadow:var(--shadow-1);object-fit:contain}
 .zsm-tip{font-size:12px;color:var(--on-surface-var);line-height:1.9}
+/* 赞赏码弹窗 */
+dialog.zsm-dlg{border:0;padding:18px 20px 16px;border-radius:26px;background:var(--surface-c-lowest);
+  color:var(--on-surface);box-shadow:var(--shadow-3);width:min(400px,92vw)}
+dialog.zsm-dlg::backdrop{background:rgba(20,18,24,.42);backdrop-filter:blur(3px)}
+.zsm-dlg .zsm-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.zsm-dlg .t{font-size:15px;font-weight:650}
+.zsm-dlg .h{font-size:11.5px;color:var(--on-surface-var);margin-top:3px;line-height:1.6}
+.zsm-dlg img{width:100%;max-width:330px;display:block;margin:0 auto;border-radius:16px;
+  background:#fff;box-shadow:var(--shadow-1)}
+.zsm-hint{margin-top:12px;font-size:11px;color:var(--on-surface-var);text-align:center;line-height:1.7}
+.about-zsm{margin-top:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  border-top:1px solid var(--surface-c-high);padding-top:14px}
+.about-zsm-tip{font-size:11.5px;color:var(--on-surface-var)}
 /* ---------- 深色 ---------- */
 html[data-theme="dark"]{
-  --logo:url(/logo-dark.png);
   --primary:#D0BCFF;--on-primary:#381E72;
   --primary-container:#4F378B;--on-primary-container:#EADDFF;
   --secondary-container:#4A4458;--on-secondary-container:#E8DEF8;
@@ -552,6 +568,7 @@ nav{
 <div id="splash">
   <div class="sp-mark" role="img" aria-label="logo"></div>
   <div class="sp-title">小米6 工具箱</div>
+  <div class="sp-brand"><b>BuFenKJ</b><i>×</i><b>DeepSeek</b></div>
   <div class="sp-bar"><i></i></div>
 </div>
 
@@ -993,6 +1010,14 @@ nav{
         <button class="btn tonal" id="btnMotion" style="height:34px;padding:0 18px">开</button>
       </div>
       <div class="field">
+        <div><div class="t">开屏动画</div><div class="h">启动时显示 logo 和 BuFenKJ × DeepSeek，约 3 秒</div></div>
+        <button class="btn tonal" id="btnSplash" style="height:34px;padding:0 18px">开</button>
+      </div>
+      <div class="field">
+        <div><div class="t">启动时显示赞赏码</div><div class="h">每次打开都弹一次赞赏码，关掉就不再打扰</div></div>
+        <button class="btn tonal" id="btnZsm" style="height:34px;padding:0 18px">开</button>
+      </div>
+      <div class="field">
         <div><div class="t">终端配色</div><div class="h">ADB 终端里命令与报错的颜色</div></div>
         <div style="display:flex;gap:14px;align-items:center">
           <label style="font-size:12px;color:var(--on-surface-var)">命令
@@ -1020,7 +1045,7 @@ nav{
         </div>
       </div>
       <div style="margin-top:14px;font-size:12px;color:var(--on-surface-var)">
-        小米6 工具箱 · Web UI v1.2
+        小米6 工具箱 · Web UI v1.3
       </div>
     </div>
 
@@ -1029,7 +1054,7 @@ nav{
         <div class="about-logo" role="img" aria-label="logo"></div>
         <div>
           <div class="t">小米6 工具箱</div>
-          <div class="h">sagit · 刷机与维护 · Web UI v1.2</div>
+          <div class="h">sagit · 刷机与维护 · Web UI v1.3</div>
         </div>
       </div>
       <div class="about-lines">
@@ -1040,13 +1065,10 @@ nav{
         数据全部留在本机，不联网上传
       </div>
 
-      <details class="about-zsm">
-        <summary><span class="zs-icon">🥤</span>赞赏码 · ZSM</summary>
-        <div class="zsm-box">
-          <img src="/zsm.png" alt="赞赏码" loading="lazy">
-          <div class="zsm-tip">如果这个工具箱帮到你了，<br>扫一扫请作者喝杯可乐。</div>
-        </div>
-      </details>
+      <div class="about-zsm">
+        <button class="btn tonal" id="aboutZsm" style="height:34px;padding:0 16px">🥤 赞赏码</button>
+        <span class="about-zsm-tip">感谢支持，扫码请作者喝杯可乐</span>
+      </div>
     </div>
   </section>
 </main>
@@ -1068,6 +1090,18 @@ nav{
   </div>
   <div id="apkList" class="infolist"></div>
   <div class="dropzone" id="apkDrop" style="margin-top:12px">⬇ 把 .apk 拖到这里直接安装</div>
+</dialog>
+
+<dialog id="zsmDlg" class="zsm-dlg">
+  <div class="zsm-head">
+    <div style="flex:1;min-width:0">
+      <div class="t">赞赏码 · ZSM</div>
+      <div class="h">如果这个工具箱帮到你了，扫码请作者喝杯可乐</div>
+    </div>
+    <button class="btn tonal" id="zsmClose" style="height:34px;padding:0 16px">关闭</button>
+  </div>
+  <img src="/zsm.png" alt="赞赏码" loading="lazy">
+  <div class="zsm-hint">不想每次打开都看到？设置 → 启动时显示赞赏码，可以关掉</div>
 </dialog>
 
 <nav>
@@ -1291,16 +1325,39 @@ const ACCENTS = {
   pink:   {"primary":"#8B4A6B","primary-container":"#FFD8E8","on-primary-container":"#3A0B22","secondary-container":"#FBD8E6","on-secondary-container":"#3A0B22"}
 };
 const DEF = {theme:"system", accent:"purple", motion:"on", refresh:5000, tile:102, confirm:true,
-  colCmd:"#D0BCFF", colErr:"#F2B8B5"};
+  splash:true, zsm:true, colCmd:"#D0BCFF", colErr:"#F2B8B5"};
 
 // 心跳：窗口关掉后后端自己退出（bye 是关窗时发的一次性信号）
 setInterval(() => fetch("/api/heartbeat", { cache: "no-store" }).catch(() => {}), 3000);
 window.addEventListener("pagehide", () => navigator.sendBeacon?.("/api/bye"));
 
-// 开屏
+// 开屏：logo + BuFenKJ × DeepSeek，3 秒；设置里能关
+const SPLASH_MS = 3000;
+
+function showZsm() {
+  const d = $("#zsmDlg");
+  if (!d || d.open) return;
+  try { d.showModal(); } catch (e) { d.hidden = false; }
+}
+
+function maybeShowZsm() {
+  if (P.zsm === false) return;
+  showZsm();
+}
+
 window.addEventListener("load", () => {
-  setTimeout(() => document.getElementById("splash")?.classList.add("hide"), 620);
+  const sp = document.getElementById("splash");
+  const finish = () => {
+    if (sp) sp.classList.add("hide");
+    setTimeout(maybeShowZsm, sp ? 460 : 0);
+  };
+  if (!sp || P.splash === false) { finish(); return; }
+  setTimeout(finish, SPLASH_MS);
 });
+
+$("#zsmClose").onclick = () => $("#zsmDlg").close();
+$("#zsmDlg").addEventListener("click", (e) => { if (e.target.id === "zsmDlg") e.currentTarget.close(); });
+$("#aboutZsm").onclick = () => showZsm();
 let P = Object.assign({}, DEF, JSON.parse(localStorage.getItem("mi6prefs") || "{}"));
 let timer = null;
 const save = () => localStorage.setItem("mi6prefs", JSON.stringify(P));
@@ -1326,6 +1383,8 @@ function applyPrefs() {
   document.querySelectorAll("#segRefresh button").forEach(b => b.classList.toggle("on", +b.dataset.r === P.refresh));
   document.querySelectorAll(".sw").forEach(b => b.classList.toggle("on", b.dataset.a === P.accent));
   $("#btnMotion").textContent = P.motion === "on" ? "开" : "关";
+  if ($("#btnSplash")) $("#btnSplash").textContent = P.splash === false ? "关" : "开";
+  if ($("#btnZsm")) $("#btnZsm").textContent = P.zsm === false ? "关" : "开";
 
   clearInterval(timer);
   if (P.refresh > 0) timer = setInterval(load, P.refresh);
@@ -1336,6 +1395,8 @@ document.querySelectorAll("#segRefresh button").forEach(b => b.onclick = () => {
 document.querySelectorAll("#segTile button").forEach(b => b.onclick = () => { P.tile = +b.dataset.s; save(); applyPrefs(); });
 document.querySelectorAll(".sw").forEach(b => b.onclick = () => { P.accent = b.dataset.a; save(); applyPrefs(); });
 $("#btnMotion").onclick = () => { P.motion = P.motion === "on" ? "off" : "on"; save(); applyPrefs(); };
+$("#btnSplash").onclick = () => { P.splash = P.splash === false; save(); applyPrefs(); };
+$("#btnZsm").onclick = () => { P.zsm = P.zsm === false; save(); applyPrefs(); };
 $("#btnConfirm").onclick = () => { P.confirm = P.confirm === false; save(); applyPrefs(); };
 $("#colCmd").oninput = (e) => { P.colCmd = e.target.value; save(); applyPrefs(); };
 $("#colErr").oninput = (e) => { P.colErr = e.target.value; save(); applyPrefs(); };
