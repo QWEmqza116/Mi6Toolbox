@@ -1,7 +1,7 @@
 # 小米6 工具箱 · Web UI
 致敬每个小米6钉子户
 > 小米6（sagit）刷机与维护工具箱，本地网页界面，Material 3 风格。**自带 Python 3.11，双击即用。**
-
+（目前只有源码，没有正式版本！）
 ![概览](docs/dashboard.png)
 
 把 adb / fastboot 的日常操作、全量包线刷、boot 镜像解包改包，还有一个能自己动手的 AI 助手，装进一个本地 Web UI 里。
