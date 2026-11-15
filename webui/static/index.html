@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>小米6 工具箱</title>
+<link rel="icon" type="image/png" href="/favicon.png">
 <style>
 :root{
   --primary:#6750A4; --on-primary:#fff;
@@ -16,6 +17,7 @@
   --outline:#79747E; --outline-var:#CAC4D0;
   --error:#B3261E; --success:#0F6B3F; --success-c:#C6F0DA; --warn-c:#FFE7B3; --warn:#7A5200;
   --r-xl:32px; --r-lg:24px; --r-md:20px; --r-full:999px;
+  --logo:url(/logo-light.png);
   --ease:cubic-bezier(.2,0,0,1); --spring:cubic-bezier(.05,.7,.1,1);
   --shadow-1:0 1px 2px rgba(29,27,32,.06),0 2px 6px rgba(29,27,32,.04);
   --shadow-2:0 2px 6px rgba(29,27,32,.07),0 6px 18px rgba(29,27,32,.05),0 12px 32px rgba(29,27,32,.04);
@@ -39,10 +41,9 @@ body{
 }
 .brand{display:flex;align-items:center;gap:12px}
 .mark{
-  width:36px;height:36px;border-radius:50%;background:var(--primary-container);
-  color:var(--on-primary-container);display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:17px;line-height:1;padding-bottom:1px;
-  box-shadow:0 1px 2px rgba(0,0,0,.06);
+  width:38px;height:38px;flex:none;border-radius:10px;
+  background:var(--logo) center/contain no-repeat;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.14));
 }
 .brand h1{font-size:17px;font-weight:600;margin:0;letter-spacing:.2px}
 .brand h1 span{color:var(--primary)}
@@ -201,8 +202,9 @@ html[data-theme="dark"] .tile.accent{
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
   transition:opacity .45s var(--ease),visibility .45s}
 #splash.hide{opacity:0;visibility:hidden}
-.sp-mark{width:72px;height:72px;border-radius:50%;background:var(--primary-container);
-  color:var(--on-primary-container);display:grid;place-items:center;font-size:32px;font-weight:700;
+.sp-mark{width:88px;height:88px;
+  background:var(--logo) center/contain no-repeat;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,.16));
   animation:pop .55s var(--spring) both}
 .sp-title{font-size:15px;font-weight:600;color:var(--on-surface-var);letter-spacing:.5px;
   animation:rise .5s .1s var(--spring) both}
@@ -366,8 +368,8 @@ html[data-theme="dark"] .ai-step.bad{background:#4A1B17;color:#F9DEDC}
 #bye{position:fixed;inset:0;z-index:10000;background:var(--surface-c-low);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center}
 #bye[hidden]{display:none}
-#bye .bye-mark{width:64px;height:64px;border-radius:50%;background:var(--surface-c-high);
-  color:var(--on-surface-var);display:grid;place-items:center;font-size:28px;font-weight:700}
+#bye .bye-mark{width:72px;height:72px;
+  background:var(--logo) center/contain no-repeat}
 #bye .bye-t{font-size:19px;font-weight:650}
 #bye .bye-h{font-size:13px;color:var(--on-surface-var);line-height:1.9}
 /* ---------- 概览仪表盘（自适应：不管窗口多大都铺满、自动折行） ---------- */
@@ -455,8 +457,29 @@ main{padding:8px clamp(10px,1.6vw,28px) 96px}
   .metric-card{flex:1 1 100%}
   .dh-chips .chip{font-size:11px;padding:0 10px}
 }
+/* ---------- 关于 ---------- */
+.about-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.about-logo{width:54px;height:54px;flex:none;
+  background:var(--logo) center/contain no-repeat;
+  filter:drop-shadow(0 1px 3px rgba(0,0,0,.14))}
+.about-head .t{font-size:15.5px;font-weight:650}
+.about-head .h{font-size:12px;color:var(--on-surface-var);margin-top:3px}
+.about-lines{font-size:12.5px;line-height:1.95;color:var(--on-surface-var)}
+.about-lines b{color:var(--primary);font-weight:600}
+.about-zsm{margin-top:14px;border-top:1px solid var(--surface-c-high);padding-top:12px}
+.about-zsm summary{cursor:pointer;font-size:12.5px;font-weight:600;color:var(--on-surface-var);
+  list-style:none;display:flex;align-items:center;gap:6px}
+.about-zsm summary::-webkit-details-marker{display:none}
+.about-zsm summary::after{content:"展开";font-size:11px;font-weight:400;opacity:.7;margin-left:auto}
+.about-zsm[open] summary::after{content:"收起"}
+.about-zsm[open] summary{color:var(--primary)}
+.zsm-box{margin-top:12px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.zsm-box img{width:196px;height:196px;border-radius:14px;background:#fff;
+  box-shadow:var(--shadow-1);object-fit:contain}
+.zsm-tip{font-size:12px;color:var(--on-surface-var);line-height:1.9}
 /* ---------- 深色 ---------- */
 html[data-theme="dark"]{
+  --logo:url(/logo-dark.png);
   --primary:#D0BCFF;--on-primary:#381E72;
   --primary-container:#4F378B;--on-primary-container:#EADDFF;
   --secondary-container:#4A4458;--on-secondary-container:#E8DEF8;
@@ -527,13 +550,13 @@ nav{
 <body>
 
 <div id="splash">
-  <div class="sp-mark">6</div>
+  <div class="sp-mark" role="img" aria-label="logo"></div>
   <div class="sp-title">小米6 工具箱</div>
   <div class="sp-bar"><i></i></div>
 </div>
 
 <header class="appbar">
-  <div class="brand"><div class="mark">6</div><h1>小米<span>6</span> 工具箱</h1></div>
+  <div class="brand"><div class="mark" role="img" aria-label="logo"></div><h1>小米<span>6</span> 工具箱</h1></div>
   <div class="spacer"></div>
   <div class="chip" id="devChip"><span class="dot"></span><span id="devText">连接中…</span></div>
   <button class="btn outline" id="refresh" style="height:36px;padding:0 18px">刷新</button>
@@ -997,26 +1020,39 @@ nav{
         </div>
       </div>
       <div style="margin-top:14px;font-size:12px;color:var(--on-surface-var)">
-        小米6 工具箱 · Web UI v1.0
+        小米6 工具箱 · Web UI v1.2
       </div>
     </div>
 
     <div class="card" style="margin-top:14px">
-      <div class="field" style="border:0;padding-bottom:6px">
-        <div><div class="t">关于</div><div class="h">小米6（sagit）刷机与维护工具箱</div></div>
+      <div class="about-head">
+        <div class="about-logo" role="img" aria-label="logo"></div>
+        <div>
+          <div class="t">小米6 工具箱</div>
+          <div class="h">sagit · 刷机与维护 · Web UI v1.2</div>
+        </div>
       </div>
-      <div style="font-size:12.5px;line-height:1.9;color:var(--on-surface-var)">
-        由 <b style="color:var(--primary)">DeepSeek</b> 编写<br>
+      <div class="about-lines">
+        作者：<b>zsm</b><br>
+        由 <b>DeepSeek</b> 编写<br>
         界面：Material 3 · 本地 Web UI（Edge 应用模式）<br>
         后端：Python 标准库 + adb / fastboot<br>
-        版本：v1.0 · 数据全部留在本机，不联网上传
+        数据全部留在本机，不联网上传
       </div>
+
+      <details class="about-zsm">
+        <summary><span class="zs-icon">🥤</span>赞赏码 · ZSM</summary>
+        <div class="zsm-box">
+          <img src="/zsm.png" alt="赞赏码" loading="lazy">
+          <div class="zsm-tip">如果这个工具箱帮到你了，<br>扫一扫请作者喝杯可乐。</div>
+        </div>
+      </details>
     </div>
   </section>
 </main>
 
 <div id="bye" hidden>
-  <div class="bye-mark">6</div>
+  <div class="bye-mark" role="img" aria-label="logo"></div>
   <div class="bye-t">服务已停止</div>
   <div class="bye-h">这个窗口可以关掉了。<br>下次要用，再双击文件夹里的 <b>启动.bat</b>。</div>
 </div>
