@@ -85,6 +85,39 @@ Mi6Toolbox/
 - 危险工具（刷机 / 重启 / 装应用 / 提取分区 / adb 命令）默认只「提议」，你在对话里点「执行」才真正跑；想全自动就打开「⚡ 直接执行」
 - 需要联网 + 有效 Key；没有 Key 时点右上角 🔑 填一个
 
+## 从源码跑 / 提交
+
+仓库里只放代码（`webui/`、`toolbox/`、`启动.bat`、README），大文件都没进仓库：
+
+```
+python-embed/        内置 Python（约 15 MB）
+tools/platform-tools/ adb / fastboot
+apk/  downloads/  backups/  data/  images/  logs/
+```
+
+新机器 clone 下来后，任选一种方式跑：
+
+1. **装个系统 Python 3.8+**，直接 `python webui\serve.py`（`启动.bat` 找不到内置版会自动退回系统 Python）
+2. 或者把 `python-embed\`（[python.org embeddable 包](https://www.python.org/downloads/windows/) 解压）和
+   `tools\platform-tools\`（[platform-tools](https://developer.android.com/tools/releases/platform-tools) 解压）放回去，双击 `启动.bat`
+
+Git 环境（本机已装好，路径 `G:\zuomian\tools\git`，已加进用户 PATH）：
+
+```bat
+cd /d G:\zuomian\Mi6Toolbox
+git remote add origin https://github.com/<你的用户名>/Mi6Toolbox.git
+git push -u origin main
+```
+
+第一次 push 会弹 GitHub 登录（Git Credential Manager，浏览器里授权即可）。
+想让提交显示成你自己的名字：
+
+```bat
+git config user.name  "你的名字"
+git config user.email "你的邮箱"
+git commit --amend --reset-author --no-edit
+```
+
 ## 已知问题 / 限制
 
 - 只操作一台设备：同时插两台时取第一个

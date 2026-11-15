@@ -1842,13 +1842,15 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def open_edge(url: str) -> bool:
-    # 窗口居中：按屏幕尺寸算位置
-    win_w, win_h = 1120, 780
+    # 窗口居中，大小跟着屏幕走（小屏别超出屏幕，大屏给宽一点给仪表盘用）
+    win_w, win_h = 1280, 860
     try:
         import ctypes
 
         user32 = ctypes.windll.user32
         sw, sh = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+        win_w = max(880, min(win_w, sw - 80))
+        win_h = max(600, min(win_h, sh - 100))
         x = max(0, (sw - win_w) // 2)
         y = max(0, (sh - win_h) // 2)
         pos = f"--window-position={x},{y}"

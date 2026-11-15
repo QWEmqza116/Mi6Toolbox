@@ -50,6 +50,7 @@ body{
 .chip{
   height:32px;padding:0 14px;border-radius:var(--r-full);display:inline-flex;align-items:center;gap:6px;
   background:var(--surface-c); color:var(--on-surface-var); font-size:12.5px; font-weight:500;
+  max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   transition:background .25s var(--ease),color .25s var(--ease);
 }
 .chip.ok{background:var(--success-c);color:var(--success)}
@@ -259,10 +260,10 @@ main::-webkit-scrollbar-thumb:hover{background:var(--outline);background-clip:co
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%}
 /* ---------- 全量包 ---------- */
 .rom-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;
-  background:var(--surface-c-low);margin-bottom:8px}
+  background:var(--surface-c-low);margin-bottom:8px;flex-wrap:wrap}
 .rom-row .em{font-size:18px;flex:none}
 .rom-row .meta2{font-size:11.5px;color:var(--on-surface-var);margin-top:2px}
-.rom-btns{display:flex;gap:6px;flex:none}
+.rom-btns{display:flex;gap:6px;flex:none;flex-wrap:wrap}
 .rom-detail{margin:-2px 0 10px 12px;padding:10px 14px;border-radius:12px;background:var(--surface-c);
   font-size:12px;color:var(--on-surface-var);white-space:pre-wrap;line-height:1.7;word-break:break-word}
 .rom-log{font-family:Consolas,monospace;font-size:11.5px;line-height:1.75}
