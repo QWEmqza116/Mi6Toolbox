@@ -16,6 +16,7 @@
   --on-surface:#1D1B20; --on-surface-var:#49454F;
   --outline:#79747E; --outline-var:#CAC4D0;
   --error:#B3261E; --success:#0F6B3F; --success-c:#C6F0DA; --warn-c:#FFE7B3; --warn:#7A5200;
+  --error-c:#F9DEDC; --info:#0B4A8F; --info-c:#D7E3FF; --teal:#00564B; --teal-c:#C4EFE7;
   --r-xl:32px; --r-lg:24px; --r-md:20px; --r-full:999px;
   --logo:url(/logo.png);
   --ease:cubic-bezier(.2,0,0,1); --spring:cubic-bezier(.05,.7,.1,1);
@@ -55,8 +56,19 @@ body{
   transition:background .25s var(--ease),color .25s var(--ease);
 }
 .chip.ok{background:var(--success-c);color:var(--success)}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--outline)}
-.chip.ok .dot{background:var(--success)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--outline);flex:none}
+.chip[class*="mode-"]{font-weight:650}
+.chip[class*="mode-"] .dot{background:currentColor;opacity:.9}
+/* 每种连接模式一个颜色，一眼能分清 */
+.chip.mode-adb{background:var(--success-c);color:var(--success)}
+.chip.mode-twrp{background:var(--warn-c);color:var(--warn)}
+.chip.mode-fastboot{background:var(--info-c);color:var(--info)}
+.chip.mode-recovery{background:var(--primary-container);color:var(--on-primary-container)}
+.chip.mode-sideload{background:var(--teal-c);color:var(--teal)}
+.chip.mode-unauthorized{background:var(--error-c);color:var(--error)}
+.chip.mode-offline{background:var(--surface-c-high);color:var(--on-surface-var)}
+.chip.mode-unauthorized .dot{animation:pulse 1.3s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
 /* ---------- 内容 ---------- */
 main{flex:1;overflow-y:auto;overflow-x:hidden;padding:8px 20px 96px;scroll-behavior:smooth}
 .page{animation:slideIn .34s var(--spring) both}
@@ -217,11 +229,6 @@ html[data-theme="dark"] .tile.accent{
   animation:slide 1s var(--ease) infinite}
 @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
 @keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}
-/* 模式配色 */
-.chip.mode-adb{background:var(--success-c);color:var(--success)}
-.chip.mode-twrp{background:var(--warn-c);color:var(--warn)}
-.chip.mode-fastboot{background:var(--secondary-container);color:var(--on-secondary-container)}
-.chip.mode-recovery{background:var(--primary-container);color:var(--on-primary-container)}
 /* ---------- 滚动条 ---------- */
 main{scrollbar-width:thin;scrollbar-color:var(--outline-var) transparent}
 main::-webkit-scrollbar{width:10px;height:10px}
@@ -504,6 +511,7 @@ html[data-theme="dark"]{
   --on-surface:#E6E0E9;--on-surface-var:#CAC4D0;
   --outline:#938F99;--outline-var:#49454F;
   --success:#9BE5B4;--success-c:#1E4630;--warn-c:#42310F;--warn:#F5D9A8;
+  --error:#F2B8B5;--error-c:#4A1B17;--info:#D7E3FF;--info-c:#0B2A4A;--teal:#A8E8DC;--teal-c:#10403A;
   --shadow-1:0 1px 2px rgba(0,0,0,.5);
   --shadow-2:0 2px 6px rgba(0,0,0,.55),0 8px 24px rgba(0,0,0,.45);
   --shadow-3:0 4px 12px rgba(0,0,0,.6);
@@ -645,9 +653,10 @@ nav{
         <div class="card dash-side">
           <div class="card-title">⚡ 常用操作</div>
           <div class="actions" style="margin-top:6px">
-            <button class="btn">刷入 TWRP</button>
-            <button class="btn tonal">备份分区</button>
-            <button class="btn outline">装应用</button>
+            <button class="btn" data-act="twrp">刷入 TWRP</button>
+            <button class="btn tonal" data-act="backup">备份分区</button>
+            <button class="btn outline" data-act="rom">📦 提取全量包</button>
+            <button class="btn outline" data-act="apk">装应用</button>
           </div>
           <div class="mini-grid">
             <div class="mini"><span class="mi">🎭</span><b id="kMagisk">—</b><i>面具</i></div>
@@ -1417,22 +1426,40 @@ function goTab(key) {
   if (key === "ai") aiLoadState(true);
   if (key === "adb") setTimeout(() => { const i = $("#termIn"); if (i) i.focus(); }, 60);
 }
-const homeBtns = document.querySelectorAll("#page-home .actions .btn");
 const setFlashMeta = (t) => { const el = document.getElementById("flashMeta"); if (el) el.textContent = t; };
-if (homeBtns.length >= 3) {
-  homeBtns[0].onclick = () => {                                // 刷入 TWRP
-    goTab("flash");
-    setFlashMeta("进 Fastboot 后，把 twrp-*.img 拖到 recovery 磁贴上");
-  };
-  homeBtns[1].onclick = () => {                                // 备份分区
-    goTab("flash");
-    setFlashMeta("单击任意分区磁贴 = 把该分区提取到 backups/（需要 TWRP 或 root）");
-  };
-  homeBtns[2].onclick = () => {                                // 装应用
-    apkDlg.showModal();
-    apkLoad();
-  };
+
+/* 全量包面板：展开 + 滚过去 + 顺手扫一遍 */
+function goRomPanel() {
+  goTab("flash");
+  setFlashMeta("把 .tgz / .zip 全量包放进 downloads/（或拖进页面），点包右边的「解包」就能提取镜像");
+  setTimeout(() => {
+    const box = document.getElementById("romBox");
+    if (box) {
+      box.open = true;
+      box.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    romScan(true);
+  }, 90);
 }
+
+/* 概览「常用操作」四个按钮 */
+document.querySelectorAll("#page-home .actions .btn").forEach((b) => {
+  b.onclick = () => {
+    const act = b.dataset.act;
+    if (act === "twrp") {
+      goTab("flash");
+      setFlashMeta("进 Fastboot 后，把 twrp-*.img 拖到 recovery 磁贴上");
+    } else if (act === "backup") {
+      goTab("flash");
+      setFlashMeta("单击任意分区磁贴 = 把该分区提取到 backups/（需要 TWRP 或 root）");
+    } else if (act === "rom") {
+      goRomPanel();
+    } else if (act === "apk") {
+      apkDlg.showModal();
+      apkLoad();
+    }
+  };
+});
 
 /* ---------------- Tab 自动补全（走后端，能补属性/服务/包名/手机路径） ---------------- */
 const KNOWN = ["getprop", "setprop", "pm", "am", "dumpsys", "logcat", "wm", "df", "du", "ls", "cd", "cat",
